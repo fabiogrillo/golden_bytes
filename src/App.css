@@ -38,8 +38,26 @@
   }
 }
 
-.nav-land{
-  background-color: #222831;
-  color: #EEEEEE;
+:root {
+  --custom-light: #f4f1deff;
+  --custom-danger: #e07a5fff;
+  --custom-dark: #3d405bff;
+  --custom-primary: #81b29aff;
+  --custom-warning: #f2cc8fff;
 }
 
+.nav-land {
+  background-color: var(--custom-primary);
+  color: var(--custom-light);
+  font-family: 'Roboto', sans-serif; 
+}
+
+.land-card {
+  background-color: var(--custom-primary);
+  color: var(--custom-light);
+  font-family: 'Roboto', sans-serif; 
+}
+
+body {
+  background-color: var(--custom-warning);
+}
