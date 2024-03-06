@@ -38,26 +38,77 @@
   }
 }
 
-:root {
-  --custom-light: #f4f1deff;
-  --custom-danger: #e07a5fff;
-  --custom-dark: #3d405bff;
-  --custom-primary: #81b29aff;
-  --custom-warning: #f2cc8fff;
+.animated-land {
+  animation: fadeIn 2s;
 }
 
-.nav-land {
-  background-color: var(--custom-primary);
-  color: var(--custom-light);
-  font-family: 'Roboto', sans-serif; 
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
-.land-card {
-  background-color: var(--custom-primary);
-  color: var(--custom-light);
-  font-family: 'Roboto', sans-serif; 
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 3.5s;
+}
+
+.stylish-text {
+  font-family: 'Courier New', Courier, monospace;
+  /* This is just an example, you can use any font you like */
+  font-size: 1.2em;
+  color: #333;
+  line-height: 1.6;
+  text-align: justify;
 }
 
 body {
-  background-color: var(--custom-warning);
+  background-color: whitesmoke;
+}
+
+:root {
+  --sky-blue: #8ecae6ff;
+  --blue-green: #219ebcff;
+  --prussian-blue: #023047ff;
+  --selective-yellow: #ffb703ff;
+  --ut-orange: #fb8500ff;
+}
+
+.nav-land {
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-land:hover {
+  background-color: var(--selective-yellow);
+  color: var(--prussian-blue);
+}
+
+.navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 183, 3, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
