@@ -1,9 +1,38 @@
 import { CiSearch } from 'react-icons/ci'
 import { Row, Button, Container, Form, InputGroup, Col, Nav } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import api from '../api';
 
+function LandingWall() {
+    const [message, setMessage] = useState('');
+    const [articles, setArticles] = useState([]);
+
+    useEffect(() => {
+        const getArticles = async () => {
+            const articles = await api.getArticles();
+            setArticles(articles);
+        }
+        getArticles()
+            .then(console.log(articles))
+            .catch(err => {
+                setMessage({
+                    msg: "Cannot retrieve articles",
+                    type: 'danger',
+                });
+                console.error(err);
+            });
+    }, []);
+
+    return (
+        <>
+            <Button>{articles.length > 0 ? articles[0].text : "ciao"}</Button>
+        </>
+    );
+};
 
 export const LandingPage = () => {
     const firstLine = "Golden Bytes is my personal blog where I share my journey through various aspects of life.";
+
 
     return (
         <>
@@ -43,6 +72,9 @@ export const LandingPage = () => {
                         </Nav>
                     </Container>
                 </Row>
+            </Container>
+            <Container>
+                <LandingWall />
             </Container>
         </>
     );
