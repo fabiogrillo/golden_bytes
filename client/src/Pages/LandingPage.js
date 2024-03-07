@@ -1,32 +1,86 @@
 import { CiSearch } from 'react-icons/ci'
-import { Row, Button, Container, Form, InputGroup, Col, Nav } from 'react-bootstrap';
+import { Row, Button, Container, Form, InputGroup, Col, Nav, Carousel, Card } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import api from '../api';
+import { AiOutlineLike, AiOutlineEye } from "react-icons/ai";
 
 function LandingWall() {
     const [message, setMessage] = useState('');
     const [articles, setArticles] = useState([]);
+    const [currentColor, setCurrentColor] = useState('--sky-blue');
+    const [index, setIndex] = useState(0);
+
+    const handleSelect = (selectedIndex, e) => {
+        setIndex(selectedIndex);
+    };
 
     useEffect(() => {
         const getArticles = async () => {
-            const articles = await api.getArticles();
-            setArticles(articles);
-        }
-        getArticles()
-            .then(console.log(articles))
-            .catch(err => {
+            try {
+                const articles = await api.getArticles();
+                setArticles(articles);
+                console.log(articles);
+            } catch (err) {
                 setMessage({
                     msg: "Cannot retrieve articles",
                     type: 'danger',
                 });
                 console.error(err);
-            });
+            }
+        }
+        getArticles();
     }, []);
 
+    useEffect(() => {
+        const colors = ['--sky-blue', '--blue-green', '--prussian-blue', '--selective-yellow', '--ut-orange'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        setCurrentColor(randomColor);
+    }, [index]);
+
     return (
-        <>
-            <Button>{articles.length > 0 ? articles[0].text : "ciao"}</Button>
-        </>
+        <Container className="fade-in text-center container-transition" style={{ marginTop: '30px', padding: '20px', backgroundColor: `var(${currentColor})`, borderRadius: '15px' }}>
+            <Carousel activeIndex={index} onSelect={handleSelect} style={{marginTop:'1em'}}>
+                {articles.slice(0, 3).map((article, index) => (
+                    <Carousel.Item >
+                        <Row>
+                            <Card style={{ maxWidth: '80%', margin: 'auto', backgroundColor: 'transparent', borderRadius: '15px', border: 'none', marginBottom: '5em' }}>
+                                <Row noGutters>
+                                    <Col md={6}>
+                                        <img rounded src={require('../Pictures/welcome_cartoon.jpeg')} text="First slide" style={{ maxHeight: '300px', objectFit: 'contain', borderRadius: '15px' }} />
+                                    </Col>
+                                    <Col md={6} style={{ display: 'flex', flexDirection: 'column' }}>
+                                        <Card.Body style={{ textAlign: 'left', flex: '1' }}>
+                                            <Card.Title>
+                                                {article.title}
+                                            </Card.Title>
+                                            <Card.Subtitle className="mb-2 text-muted">Written by: {article.author}
+                                            </Card.Subtitle>
+                                            <Card.Text>
+                                                {article.description}
+                                            </Card.Text>
+                                        </Card.Body>
+                                        <Card.Text style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <div>
+                                                <AiOutlineLike />{article.likes}
+                                                <AiOutlineEye />{article.views}
+                                            </div>
+                                            <div>
+                                                {String(article.date).replace(/(\\d{4})(\\d{2})(\\d{2})/, '$1-$2-$3')}
+                                            </div>
+                                        </Card.Text>
+                                    </Col>
+                                </Row>
+                            </Card>
+                        </Row>
+                    </Carousel.Item>
+                ))}
+            </Carousel>
+        </Container>
+
+
+
+
+
     );
 };
 
@@ -36,7 +90,7 @@ export const LandingPage = () => {
 
     return (
         <>
-            <Container className="fade-in" style={{ marginTop: '10px', padding: '20px', backgroundColor: 'var(--sky-blue)', borderRadius: '15px' }}>
+            <Container className="fade-in" style={{ marginTop: '30px', padding: '20px', backgroundColor: 'var(--sky-blue)', borderRadius: '15px' }}>
                 <Row className="d-flex justify-content-center">
                     <Col md={8}>
                         <p className="fade-in stylish-text" style={{ color: 'var(--prussian-blue)', fontSize: '1.5em', fontWeight: 'bold', textAlign: 'center' }}>
@@ -49,7 +103,7 @@ export const LandingPage = () => {
                 </Row>
             </Container>
             <Container>
-                <Row className="d-flex justify-content-center" style={{ marginTop: '20px' }}>
+                <Row className="d-flex justify-content-center" style={{ marginTop: '30px' }}>
                     <InputGroup className="mb-3" style={{ maxWidth: '300px', maxHeight: '10px', borderRadius: '20px' }} >
                         <Form.Control type="text" placeholder="Search Keyword" className="mr-sm-2" style={{ borderRadius: '20px' }} />
                         <Button variant="outline-success" id="button-addon2" style={{ borderRadius: '20px', backgroundColor: 'var(--ut-orange)', borderColor: 'var(--ut-orange)', color: 'var(--prussian-blue)' }}>
@@ -73,9 +127,7 @@ export const LandingPage = () => {
                     </Container>
                 </Row>
             </Container>
-            <Container>
-                <LandingWall />
-            </Container>
+            <LandingWall />
         </>
     );
 };
