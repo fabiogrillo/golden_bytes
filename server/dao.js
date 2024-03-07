@@ -1,7 +1,10 @@
 'use strict'
 
 const sqlite = require('sqlite3');
-const db = require('./db');
+
+const db = new sqlite.Database('db.sqlite', (err) => {
+    if(err) throw err;
+});
 
 // get articles
 exports.listArticles = () => {
@@ -12,10 +15,9 @@ exports.listArticles = () => {
                 reject(err);
                 return;
             }
-            const articles = rows.map((e) => ({
-                id: e.art_id, title: e.title, author: e.author,
-                views: e.views, date: e.date, body: e.body
-            }));
+            //console.log(rows);
+            const articles = rows.map((e) => ({id: e.art_id, title: e.title, text: e.text, author: e.author,
+                views: e.views, likes: e.likes, date: e.date}));
             resolve(articles);
         });
     });
