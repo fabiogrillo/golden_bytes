@@ -16,7 +16,8 @@ exports.listArticles = () => {
                 return;
             }
             //console.log(rows);
-            const articles = rows.map((e) => ({id: e.art_id, title: e.title, text: e.text, author: e.author, views: e.views, likes: e.likes, date: e.date}));
+            const articles = rows.map((e) => ({id: e.art_id, title: e.title, text: e.text, author: e.author, 
+                views: e.views, likes: e.likes, date: e.date, tags: e.tags, description: e.description}));
             resolve(articles);
         });
     });
