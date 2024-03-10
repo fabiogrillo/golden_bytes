@@ -3,8 +3,8 @@ import './App.css';
 import NavBar from './Pages/NavBar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Footer from './Pages/Footer';
-import { Button } from 'react-bootstrap';
 import LandingPage from './Pages/LandingPage';
+import ArticlesPage from './Pages/ArticlesPage';
 
 function App() {
   return (
@@ -14,6 +14,10 @@ function App() {
         <Routes>
           <Route exact path='/' element={
             <LandingPage />
+          }
+          />
+          <Route path='/articles' element={
+            <ArticlesPage/>
           }
           />
         </Routes>
