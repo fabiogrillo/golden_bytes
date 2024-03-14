@@ -1,7 +1,6 @@
-import { CiSearch } from 'react-icons/ci'
 import { Row, Button, Container, Form, InputGroup, Col, Nav, Carousel, Card, Badge } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
-import NewsPage from './NewsPage';
+import { Search } from 'react-bootstrap-icons';
+import WriteComponent from './WriteComponent';
 
 
 export const LandingPage = () => {
@@ -27,7 +26,7 @@ export const LandingPage = () => {
                     <InputGroup className="mb-3" style={{ maxWidth: '300px', maxHeight: '10px', borderRadius: '20px' }} >
                         <Form.Control type="text" placeholder="Search Keyword" className="mr-sm-2" style={{ borderRadius: '20px' }} />
                         <Button variant="outline-success" id="button-addon2" style={{ borderRadius: '20px', backgroundColor: 'var(--ut-orange)', borderColor: 'var(--ut-orange)', color: 'var(--prussian-blue)' }}>
-                            <CiSearch />
+                            <Search />
                         </Button>
                     </InputGroup>
                 </Row>
@@ -48,7 +47,7 @@ export const LandingPage = () => {
                 </Row>
             </Container>
             <Container style={{ marginTop: '3em' }}>
-                <NewsPage />
+                <WriteComponent />
             </Container>
         </>
     );

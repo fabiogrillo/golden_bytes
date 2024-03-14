@@ -40,14 +40,10 @@ const formats = [
     'video',
 ]
 
-function NewsPage() {
+function WriteComponent() {
     return (
         <>
-            <ListGroup variant="flush" style={{ borderRadius: '15px' }}>
-                <ListGroup.Item >el 1</ListGroup.Item>
-                <ListGroup.Item>el 2</ListGroup.Item>
-            </ListGroup>
-            <Container style={{ borderRadius:'15px'}}>
+            <Container >
                 <ReactQuill theme="snow" modules={modules} style={{ marginTop: '3em', backgroundColor:'white' }} 
                     formats={formats} placeholder="Insert text here..." />
             </Container>
@@ -55,4 +51,4 @@ function NewsPage() {
     )
 }
 
-export default NewsPage;
+export default WriteComponent;

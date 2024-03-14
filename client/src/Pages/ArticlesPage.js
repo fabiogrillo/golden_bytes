@@ -1,8 +1,8 @@
 import api from '../api';
-import { AiOutlineLike, AiOutlineEye } from "react-icons/ai";
 import { Card, Container, Carousel, Row, Col, Badge, Button } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import NewsPage from './NewsPage';
+import NewsPage from './WriteComponent';
+import {EyeFill, HandThumbsUpFill} from 'react-bootstrap-icons';
 
 function ArticlesPage() {
     const [message, setMessage] = useState('');
@@ -71,8 +71,8 @@ function ArticlesPage() {
                                             </Card.Body>
                                             <Card.Text style={{ display: 'flex', justifyContent: 'space-between' }}>
                                                 <div>
-                                                    <AiOutlineLike />{article.likes}
-                                                    <AiOutlineEye />{article.views}
+                                                    <HandThumbsUpFill />{article.likes}
+                                                    <EyeFill />{article.views}
                                                 </div>
                                                 <div>
                                                     {new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' })}
