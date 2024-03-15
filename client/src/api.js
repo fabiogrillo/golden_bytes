@@ -11,6 +11,18 @@ async function getArticles() {
     }
 };
 
+async function getTags() {
+    // call: GET /api/articles/
+    const response = await fetch(BASEURL + '/tags');
+    const tagsJson = await response.json();
+    if (response.ok) {
+        return tagsJson;
+    } else {
+        throw tagsJson;
+    }
+};
+
+// API Login & Logout
 async function logIn(credentials) {
     let response = await fetch(BASEURL + '/sessions', {
         method: 'POST',
@@ -55,5 +67,5 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, logIn, logOut, getUserInfo };
+const api = { getArticles, getTags, logIn, logOut, getUserInfo };
 export default api;

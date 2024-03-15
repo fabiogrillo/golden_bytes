@@ -70,6 +70,19 @@ app.get('/api/articles', async (req, res) => {
   }
 });
 
+// GET /api/tags
+app.get('/api/tags', async (req, res) => {
+  try {
+    const tags = await articlesDao.listTags();
+    if (tags.err)
+      res.status(404).json(tags)
+    else
+      res.json(tags);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
 /*** Users APIs ***/
 
 /* login */

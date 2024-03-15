@@ -14,10 +14,28 @@ exports.listArticles = () => {
             }
             //console.log(rows);
             const articles = rows.map((e) => ({
-                id: e.art_id, title: e.title, text: e.text, author: e.author,
-                views: e.views, likes: e.likes, date: e.date, tags: e.tags, description: e.description
+                id: e.art_id, content: e.content, usr_id: e.usr_id,
+                date: e.date, tags: e.tags, description: e.description
             }));
             resolve(articles);
+        });
+    });
+};
+
+// get tags
+exports.listTags = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM tags';
+        db.all(sql, [], (err, rows) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            //console.log(rows);
+            const tags = rows.map((t) => ({
+                name: t.tag_name
+            }));
+            resolve(tags);
         });
     });
 };

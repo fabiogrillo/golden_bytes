@@ -1,8 +1,6 @@
 import api from '../api';
-import { Card, Container, Carousel, Row, Col, Badge, Button } from 'react-bootstrap';
+import { Card, Container, Carousel, Row, Col, Badge } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import NewsPage from './WriteComponent';
-import {EyeFill, HandThumbsUpFill} from 'react-bootstrap-icons';
 
 function ArticlesPage() {
     const [message, setMessage] = useState('');
@@ -61,7 +59,7 @@ function ArticlesPage() {
                                         <Col md={6} style={{ display: 'flex', flexDirection: 'column' }}>
                                             <Card.Body style={{ textAlign: 'left', flex: '1' }}>
                                                 <Card.Title style={{ fontFamily: 'Georgia, serif', fontSize: '2.5em' }}>
-                                                    {article.title}
+                                                    {article.content}
                                                 </Card.Title>
                                                 <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em' }}>Written by: {article.author}
                                                 </Card.Subtitle>
@@ -70,10 +68,6 @@ function ArticlesPage() {
                                                 </Card.Text>
                                             </Card.Body>
                                             <Card.Text style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <div>
-                                                    <HandThumbsUpFill />{article.likes}
-                                                    <EyeFill />{article.views}
-                                                </div>
                                                 <div>
                                                     {new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' })}
                                                 </div>
@@ -93,9 +87,15 @@ function ArticlesPage() {
                             <Card className="mb-4" style={{ margin: 'auto', backgroundColor: 'transparent', borderRadius: '15px', border: '1px solid #000', marginBottom: '5em', transform: isHovered[index] ? 'scale(1.05)' : 'scale(1)', transition: 'transform 0.3s' }} onMouseOver={() => handleMouseOver(index)} onMouseOut={() => handleMouseOut(index)} onClick={() => console.log('Card clicked!')}>
                                 <Card.Img variant="top" src={require('../Pictures/welcome_cartoon.jpeg')} style={{ maxWidth: '30%', objectFit: 'contain', borderRadius: '15px' }} />
                                 <Card.Body style={{ maxHeight: '200px', overflow: 'hidden' }}>
-                                    <Card.Title style={{ fontFamily: 'Georgia, serif', fontSize: '2em', overflow: 'hidden', textOverflow: 'ellipsis' }}>{article.title}</Card.Title>
-                                    <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em', overflow: 'hidden', textOverflow: 'ellipsis' }}>Written by: {article.author}</Card.Subtitle>
-                                    <Card.Text style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1.2em', overflow: 'hidden', textOverflow: 'ellipsis' }}>{article.description}</Card.Text>
+                                    <Card.Title style={{ fontFamily: 'Georgia, serif', fontSize: '2em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {article.content}
+                                    </Card.Title>
+                                    <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        Written by: {article.usr_id}
+                                    </Card.Subtitle>
+                                    <Card.Text style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1.2em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {article.description}
+                                    </Card.Text>
                                 </Card.Body>
                                 <Card.Footer>
                                     {article.tags.split(',').map((tag, i) => (
@@ -105,7 +105,9 @@ function ArticlesPage() {
                                     ))}
                                 </Card.Footer>
                                 <Card.Footer>
-                                    <small className="text-muted">{new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' })}</small>
+                                    <small className="text-muted">
+                                        {new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    </small>
                                 </Card.Footer>
                             </Card>
                         </Col>

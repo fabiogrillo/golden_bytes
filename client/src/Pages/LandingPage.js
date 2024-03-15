@@ -1,7 +1,5 @@
-import { Row, Button, Container, Form, InputGroup, Col, Nav, Carousel, Card, Badge } from 'react-bootstrap';
+import { Row, Button, Container, Form, InputGroup, Col, Nav } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
-import WriteComponent from './WriteComponent';
-
 
 export const LandingPage = () => {
     const firstLine = "Golden Bytes is my personal blog where I share my journey through various aspects of life.";
@@ -45,9 +43,6 @@ export const LandingPage = () => {
                         </Nav>
                     </Container>
                 </Row>
-            </Container>
-            <Container style={{ marginTop: '3em' }}>
-                <WriteComponent />
             </Container>
         </>
     );
