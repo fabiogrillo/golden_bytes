@@ -85,9 +85,11 @@ function App() {
           />
 
           <Route path='/write-article' element={
-            <WritePage />
+            <WritePage
+              user={user}
+              loggedIn={loggedIn} />
           } />
-          
+
         </Routes>
         <Footer />
       </Router>

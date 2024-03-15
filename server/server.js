@@ -83,6 +83,42 @@ app.get('/api/tags', async (req, res) => {
   }
 });
 
+// POST /api/articles
+app.post('/api/articles', isLoggedIn, [
+  check('usr_id').isInt({ min: 1, max: 10 }),
+  check('content').custom((value) => {
+    // check delta format
+    if (!value.ops || !Array.isArray(value.ops)) {
+      throw new Error('content must be a delta object');
+    }
+    return true;
+  }),
+  check('date').matches(/^[0-9]{8}$/).withMessage('Date format must be "yyyymmdd"'),
+  check('tags').custom((value) => {
+    // check tags is a list of strings
+    if (!Array.isArray(value) || value.some(tag => typeof tag !== 'string')) {
+      throw new Error('Tags must be a string array');
+    }
+    if (value.length > 5) {
+      throw new Error('not more than 5 tags');
+    }
+    return true;
+  }),
+  check('description').isLength({ min: 20, max: 500 })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  try {
+    await articlesDao.createArticle(req.user.id, req.body.content, req.body.date, req.body.tags, req.body.description);
+    res.status(201).end();
+  } catch (err) {
+    res.status(500).json({ error: `Server error during the creation of article...` });
+  }
+});
+
 /*** Users APIs ***/
 
 /* login */

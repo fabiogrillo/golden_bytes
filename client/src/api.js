@@ -22,6 +22,27 @@ async function getTags() {
     }
 };
 
+async function addArticle(usr_id, content, date, tags, description) {
+    //call: POST /api/articles
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/articles', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ usr_id: usr_id, content: content, date: date, tags: tags, description: description }),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+}
+
 // API Login & Logout
 async function logIn(credentials) {
     let response = await fetch(BASEURL + '/sessions', {
@@ -67,5 +88,5 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, getTags, logIn, logOut, getUserInfo };
+const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle };
 export default api;
