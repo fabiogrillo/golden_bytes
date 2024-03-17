@@ -117,7 +117,9 @@ export const WriteComponent = (props) => {
         const stringTags = selectedTags.map(tag => tag.name).join(', ');
         setStringTags(stringTags);
 
+        console.log(content);
         const jsonContent = JSON.stringify(content);
+        console.log(jsonContent);
         setFinished(true);
     }
 

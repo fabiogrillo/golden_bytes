@@ -23,6 +23,7 @@ async function getTags() {
 };
 
 async function addArticle(usr_id, content, date, tags, description) {
+    //console.log(content);
     //call: POST /api/articles
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/articles', {

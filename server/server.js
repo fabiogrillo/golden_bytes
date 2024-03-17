@@ -86,24 +86,19 @@ app.get('/api/tags', async (req, res) => {
 // POST /api/articles
 app.post('/api/articles', isLoggedIn, [
   check('usr_id').isInt({ min: 1, max: 10 }),
-  check('content').custom((value) => {
-    // check delta format
-    if (!value.ops || !Array.isArray(value.ops)) {
-      throw new Error('content must be a delta object');
-    }
-    return true;
-  }),
+  // add validation on content
   check('date').matches(/^[0-9]{8}$/).withMessage('Date format must be "yyyymmdd"'),
   check('tags').custom((value) => {
-    // check tags is a list of strings
-    if (!Array.isArray(value) || value.some(tag => typeof tag !== 'string')) {
-      throw new Error('Tags must be a string array');
+    // check tags is a single string
+    if (typeof value !== 'string') {
+      throw new Error('Tags must be a single string');
     }
-    if (value.length > 5) {
-      throw new Error('not more than 5 tags');
+    if (value.length > 50) {
+      throw new Error('Tags must not exceed 50 characters');
     }
     return true;
   }),
+
   check('description').isLength({ min: 20, max: 500 })
 ], async (req, res) => {
   const errors = validationResult(req);
