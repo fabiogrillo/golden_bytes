@@ -10,6 +10,7 @@ import UserLanding from './Pages/UserLanding';
 import { useState, useEffect } from 'react';
 import api from './api';
 import WritePage from './Pages/WritePage';
+import ManagementPage from './Pages/ManagementPage';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -86,6 +87,12 @@ function App() {
 
           <Route path='/write-article' element={
             <WritePage
+              user={user}
+              loggedIn={loggedIn} />
+          } />
+
+          <Route path='/articles-manager' element={
+            <ManagementPage
               user={user}
               loggedIn={loggedIn} />
           } />

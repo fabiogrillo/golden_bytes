@@ -83,6 +83,21 @@ app.get('/api/tags', async (req, res) => {
   }
 });
 
+// GET /api/articles/:id
+app.get('/api/articles/:id', isLoggedIn,
+  [check('id').isInt({ min: 1, max: 5 })],
+  async (req, res) => {
+    try {
+      const myArticles = await articlesDao.getMyArticles(req.user.id);
+      if (myArticles.err)
+        res.status(404).json(myArticles)
+      else
+        res.json(myArticles);
+    } catch (err) {
+      res.status(500).end();
+    };
+  });
+
 // POST /api/articles
 app.post('/api/articles', isLoggedIn, [
   check('usr_id').isInt({ min: 1, max: 10 }),
@@ -105,7 +120,6 @@ app.post('/api/articles', isLoggedIn, [
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
-
   try {
     await articlesDao.createArticle(req.user.id, req.body.content, req.body.date, req.body.tags, req.body.description);
     res.status(201).end();

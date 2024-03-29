@@ -22,8 +22,18 @@ async function getTags() {
     }
 };
 
+async function getMyArticles(id) {
+    // call: GET /api/articles/:id
+    const response = await fetch(BASEURL + '/articles/' + id);
+    const myArticlesJson = await response.json();
+    if (response.ok) {
+        return myArticlesJson;
+    } else {
+        throw myArticlesJson;
+    }
+};
+
 async function addArticle(usr_id, content, date, tags, description) {
-    //console.log(content);
     //call: POST /api/articles
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/articles', {
@@ -89,5 +99,5 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle };
+const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles };
 export default api;

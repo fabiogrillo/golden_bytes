@@ -6,14 +6,15 @@ export const UserLanding = (props) => {
     return (
         <Container style={{ marginTop: '3em' }} className="text-center">
             <Row className="justify-content-md-center">
-                <h1 style={{ fontSize: '2.5em' }}>Hello {name}</h1>
+                <h1 style={{ fontSize: '2.5em' }}>Hello, {name}</h1>
                 <p style={{ fontSize: '1.3em' }}>
                     Welcome on your personal dashboard.
                 </p>
             </Row>
-            <ButtonGroup vertical>
-                <Button href="/write-article" size="lg" style={{ backgroundColor: 'var(--prussian-blue)', fontSize: '1.3em' }}>New article <PencilFill /></Button>
-                <Button href="/manage-articles" size="lg" style={{ backgroundColor: 'var(--selective-yellow)', fontSize: '1.3em' }}>Manage articles <JournalText /></Button>
+            <ButtonGroup vertical style={{marginTop:'2em'}}>
+                <Button href="/write-article" size="lg" style={{ backgroundColor: 'var(--prussian-blue)', fontSize: '1.3em', borderRadius: '10px' }}>New article <PencilFill /></Button>
+                <br />
+                <Button href="/articles-manager" size="lg" style={{ backgroundColor: 'var(--selective-yellow)', fontSize: '1.3em', borderRadius: '10px' }}>Manage articles <JournalText /></Button>
             </ButtonGroup>
         </Container>
 

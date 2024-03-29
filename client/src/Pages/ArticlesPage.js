@@ -26,7 +26,6 @@ function ArticlesPage() {
             try {
                 const articles = await api.getArticles();
                 setArticles(articles);
-                console.log(articles);
             } catch (err) {
                 setMessage({
                     msg: "Cannot retrieve articles",
@@ -46,39 +45,41 @@ function ArticlesPage() {
 
     return (
         <>
-            <Container className="fade-in text-center container-transition" style={{ marginTop: '30px', padding: '20px', backgroundColor: `var(${currentColor})`, borderRadius: '15px', color: '#FFFFFF' }}>
+            <Container className="fade-in text-center container-transition" style={{ marginTop: '3em', padding: '20px', backgroundColor: `var(${currentColor})`, borderRadius: '15px', color: '#FFFFFF' }}>
                 <Carousel activeIndex={index} onSelect={handleSelect} style={{ marginTop: '1em' }}>
-                    {articles.slice(0, 3).map((article, index) => (
-                        <Carousel.Item >
-                            <Row>
-                                <Card style={{ maxWidth: '80%', margin: 'auto', backgroundColor: 'transparent', borderRadius: '15px', border: 'none', marginBottom: '5em' }}>
-                                    <Row noGutters>
-                                        <Col md={6}>
-                                            <img rounded src={require('../Pictures/welcome_cartoon.jpeg')} text="First slide" style={{ maxHeight: '300px', objectFit: 'contain', borderRadius: '15px' }} />
-                                        </Col>
-                                        <Col md={6} style={{ display: 'flex', flexDirection: 'column' }}>
-                                            <Card.Body style={{ textAlign: 'left', flex: '1' }}>
-                                                <Card.Title style={{ fontFamily: 'Georgia, serif', fontSize: '2.5em' }}>
-                                                    {article.content}
-                                                </Card.Title>
-                                                <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em' }}>Written by: {article.author}
-                                                </Card.Subtitle>
-                                                <Card.Text style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1.2em' }}>
-                                                    {article.description}
-                                                </Card.Text>
-                                            </Card.Body>
-                                            <Card.Text style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <div>
+                    {articles.slice(0, 3).map((article, index) => {
+                        let title = JSON.parse(article.content).ops[0].insert.trim();
+                        return (
+                            <Carousel.Item key={index} >
+                                <Row>
+                                    <Card style={{ maxWidth: '80%', margin: 'auto', backgroundColor: 'transparent', borderRadius: '15px', border: 'none', marginBottom: '5em' }}>
+                                        <Row>
+                                            <Col md={6}>
+                                                <img rounded='true' src={require('../Pictures/welcome_cartoon.jpeg')} text="First slide" style={{ maxHeight: '300px', objectFit: 'contain', borderRadius: '15px' }} />
+                                            </Col>
+                                            <Col md={6} style={{ display: 'flex', flexDirection: 'column' }}>
+                                                <Card.Body style={{ textAlign: 'left', flex: '1' }}>
+                                                    <Card.Title style={{ fontFamily: 'Georgia, serif', fontSize: '2.5em' }}>
+                                                        {title}
+                                                    </Card.Title>
+                                                    <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em' }}>Written by: {article.name}
+                                                    </Card.Subtitle>
+                                                    <Card.Text style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1.2em' }}>
+                                                        {article.description}
+                                                    </Card.Text>
+                                                </Card.Body>
+                                                <Card.Text style={{ display: 'flex', justifyContent: 'space-between' }}>
                                                     {new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                                </div>
-                                            </Card.Text>
-                                        </Col>
-                                    </Row>
-                                </Card>
-                            </Row>
-                        </Carousel.Item>
-                    ))}
+                                                </Card.Text>
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                </Row>
+                            </Carousel.Item>
+                        )
+                    })}
                 </Carousel>
+
             </Container>
             <Container style={{ marginTop: '40px' }}>
                 <Row>
@@ -91,7 +92,7 @@ function ArticlesPage() {
                                         {article.content}
                                     </Card.Title>
                                     <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        Written by: {article.usr_id}
+                                        Written by: {article.name}
                                     </Card.Subtitle>
                                     <Card.Text style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1.2em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                         {article.description}
