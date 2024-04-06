@@ -98,6 +98,21 @@ app.get('/api/articles/:id', isLoggedIn,
     };
   });
 
+// DELETE /api/articles/:usr_id/:art_id
+app.delete('/api/articles/:usr_id/:art_id', isLoggedIn,
+  [check('usr_id').isInt({ min: 1, max: 10 }), check('art_id').isInt({ min: 1, max: 1000 })],
+  async (req, res) => {
+    try {
+      const result = await articlesDao.deleteUserArticle(req.params.usr_id, req.params.art_id);
+      if (result.err)
+        res.status(404).json(result)
+      else
+        res.json({ message: "Article deleted succesfully." });
+    } catch (err) {
+      res.status(500).end();
+    };
+  });
+
 // POST /api/articles
 app.post('/api/articles', isLoggedIn, [
   check('usr_id').isInt({ min: 1, max: 10 }),

@@ -63,10 +63,7 @@ function App() {
 
         <Routes>
           <Route exact path='/' element={
-            loggedIn ?
-              <UserLanding
-                user={user} /> :
-              <LandingPage />
+            <LandingPage />
           }
           />
 
@@ -89,6 +86,11 @@ function App() {
             <WritePage
               user={user}
               loggedIn={loggedIn} />
+          } />
+
+          <Route path='personal-area' element={
+            <UserLanding
+              user={user} />
           } />
 
           <Route path='/articles-manager' element={

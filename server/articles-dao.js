@@ -88,7 +88,21 @@ exports.createArticle = (usr_id, content, date, tags, description) => {
                 reject(err);
                 return;
             }
-            resolve(this.lastID);
+            resolve(this.changes);
+        });
+    });
+};
+
+// delete a user's article
+exports.deleteUserArticle = (usr_id, art_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM articles WHERE usr_id = ? AND art_id = ?';
+        db.run(sql, [usr_id, art_id], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(this.changes);
         });
     });
 };

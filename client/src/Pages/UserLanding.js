@@ -11,7 +11,7 @@ export const UserLanding = (props) => {
                     Welcome on your personal dashboard.
                 </p>
             </Row>
-            <ButtonGroup vertical style={{marginTop:'2em'}}>
+            <ButtonGroup vertical style={{ marginTop: '2em' }}>
                 <Button href="/write-article" size="lg" style={{ backgroundColor: 'var(--prussian-blue)', fontSize: '1.3em', borderRadius: '10px' }}>New article <PencilFill /></Button>
                 <br />
                 <Button href="/articles-manager" size="lg" style={{ backgroundColor: 'var(--selective-yellow)', fontSize: '1.3em', borderRadius: '10px' }}>Manage articles <JournalText /></Button>

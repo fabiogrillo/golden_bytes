@@ -54,6 +54,26 @@ async function addArticle(usr_id, content, date, tags, description) {
     });
 }
 
+async function deleteMyArticle(usr_id, art_id) {
+    //call: DELETE /api/articles
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/articles/' + usr_id + '/' + art_id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+}
+
 // API Login & Logout
 async function logIn(credentials) {
     let response = await fetch(BASEURL + '/sessions', {
@@ -99,5 +119,5 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles };
+const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles, deleteMyArticle };
 export default api;

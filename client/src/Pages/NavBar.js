@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-import { Book, BoxArrowLeft, InfoCircle, PersonCircle } from 'react-bootstrap-icons';
+import { Book, BoxArrowLeft, CloudCheck, InfoCircle, PersonCircle } from 'react-bootstrap-icons';
 
 const NavBar = (props) => {
 
@@ -20,12 +20,16 @@ const NavBar = (props) => {
                             </Nav.Link>
                             {props.loggedIn ?
                                 (
-                                    <Nav.Link href="/" onClick={() => {
-                                        props.logout();
-                                    }} style={{ color: 'var(--selective-yellow)' }}>
-                                        <BoxArrowLeft /> Logout
-                                    </Nav.Link>
-
+                                    <>
+                                        <Nav.Link href='/personal-area' style={{ color: 'var(--selective-yellow)' }}>
+                                            <CloudCheck /> My Articles
+                                        </Nav.Link>
+                                        <Nav.Link href="/" onClick={() => {
+                                            props.logout();
+                                        }} style={{ color: 'var(--selective-yellow)' }}>
+                                            <BoxArrowLeft /> Logout
+                                        </Nav.Link>
+                                    </>
                                 ) : (
                                     <Nav.Link href="/login" style={{ color: 'var(--selective-yellow)' }} >
                                         <PersonCircle /> LogIn

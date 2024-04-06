@@ -89,7 +89,7 @@ function ArticlesPage() {
                                 <Card.Img variant="top" src={require('../Pictures/welcome_cartoon.jpeg')} style={{ maxWidth: '30%', objectFit: 'contain', borderRadius: '15px' }} />
                                 <Card.Body style={{ maxHeight: '200px', overflow: 'hidden' }}>
                                     <Card.Title style={{ fontFamily: 'Georgia, serif', fontSize: '2em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {article.content}
+                                        {JSON.parse(article.content).ops[0].insert.trim()}
                                     </Card.Title>
                                     <Card.Subtitle className="mb-2 text-muted" style={{ fontFamily: 'Verdana, sans-serif', fontSize: '1em', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                         Written by: {article.name}

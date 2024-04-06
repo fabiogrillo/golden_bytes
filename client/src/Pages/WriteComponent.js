@@ -45,7 +45,7 @@ const formats = [
 ]
 
 export const WriteComponent = (props) => {
-    const quillRef = useRef(); // Crea un riferimento React
+    const quillRef = useRef();
     const [content, setContent] = useState({});
     const [first, setFirst] = useState(true);
     const [second, setSecond] = useState(true);
