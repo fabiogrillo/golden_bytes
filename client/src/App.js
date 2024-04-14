@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react';
 import api from './api';
 import WritePage from './Pages/WritePage';
 import ManagementPage from './Pages/ManagementPage';
+import ArticleVisualizer from './Pages/ArticleVisualizerPage';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -88,7 +89,7 @@ function App() {
               loggedIn={loggedIn} />
           } />
 
-          <Route path='personal-area' element={
+          <Route path='/personal-area' element={
             <UserLanding
               user={user} />
           } />
@@ -97,6 +98,10 @@ function App() {
             <ManagementPage
               user={user}
               loggedIn={loggedIn} />
+          } />
+
+          <Route path='/articles/:art_id' element={
+            <ArticleVisualizer />
           } />
 
         </Routes>

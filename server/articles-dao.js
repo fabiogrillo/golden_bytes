@@ -25,7 +25,7 @@ exports.listArticles = () => {
 // GET current user articles' list
 exports.getMyArticles = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM articles WHERE usr_id = ?'
+        const sql = 'SELECT * FROM articles WHERE usr_id = ?';
         db.all(sql, [id], (err, rows) => {
             if (err) {
                 reject(err);
@@ -43,6 +43,33 @@ exports.getMyArticles = (id) => {
         });
     });
 };
+
+// GET article info by its id
+exports.getArticleById = (art_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM articles WHERE art_id = ?';
+        db.get(sql, [art_id], (err, row) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            if (row === undefined) {
+                resolve({ error: 'Impossible to retrieve the selected article!' });
+            } else {
+                const myArticle = {
+                    art_id: row.art_id,
+                    content: row.content,
+                    usr_id: row.usr_id,
+                    date: row.date,
+                    tags: row.tags,
+                    description: row.description,
+                };
+                resolve(myArticle);
+            }
+        });
+    });
+};
+
 
 // get users
 exports.listUsers = () => {

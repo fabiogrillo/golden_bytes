@@ -83,8 +83,8 @@ app.get('/api/tags', async (req, res) => {
   }
 });
 
-// GET /api/articles/:id
-app.get('/api/articles/:id', isLoggedIn,
+// GET /api/users/:id/articles
+app.get('/api/users/:id/articles', isLoggedIn,
   [check('id').isInt({ min: 1, max: 5 })],
   async (req, res) => {
     try {
@@ -98,8 +98,23 @@ app.get('/api/articles/:id', isLoggedIn,
     };
   });
 
-// DELETE /api/articles/:usr_id/:art_id
-app.delete('/api/articles/:usr_id/:art_id', isLoggedIn,
+// GET /api/articles/:art_id
+app.get('/api/articles/:art_id', [check('art_id').isInt({ min: 1, max: 500 })],
+  async (req, res) => {
+    try {
+      const myArticle = await articlesDao.getArticleById(req.params.art_id);
+      if (myArticle.err)
+        res.status(404).json(myArticle)
+      else
+        res.json(myArticle);
+    } catch (err) {
+      res.status(500).end();
+    };
+  });
+
+
+// DELETE /api/users/:usr_id/articles/:art_id
+app.delete('/api/users/:usr_id/articles/:art_id', isLoggedIn,
   [check('usr_id').isInt({ min: 1, max: 10 }), check('art_id').isInt({ min: 1, max: 1000 })],
   async (req, res) => {
     try {
@@ -113,8 +128,8 @@ app.delete('/api/articles/:usr_id/:art_id', isLoggedIn,
     };
   });
 
-// POST /api/articles
-app.post('/api/articles', isLoggedIn, [
+// POST /api/users/:usr_id/articles
+app.post('/api/users/:usr_id/articles', isLoggedIn, [
   check('usr_id').isInt({ min: 1, max: 10 }),
   // add validation on content
   check('date').matches(/^[0-9]{8}$/).withMessage('Date format must be "yyyymmdd"'),

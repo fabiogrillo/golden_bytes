@@ -20,7 +20,7 @@ export const ManagementPage = (props) => {
             setMessage({ msg: 'Impossible to retrieve personal ArticlesPage. Try again!', type: 'danger' });
             console.error(err);
         });
-    }, [myArticles]);
+    }, [articleDeletedId]);
 
     useEffect(() => {
         const deleteMyArticle = async () => {
@@ -64,8 +64,16 @@ export const ManagementPage = (props) => {
                     <Row key={index}>
                         {articlesPair.map((article, index) => {
                             let title = JSON.parse(article.content).ops[0].insert.trim();
+                            let item_title = title;
+                            if (title.length > 35) {
+                                item_title = title.substring(0, 35) + "...";
+                            }
                             let date = new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
                             let description = article.description.length > 100 ? article.description.substring(0, 50) + "..." : article.description;
+                            let item_description = description;
+                            if (description.length > 52) {
+                                item_description = description.substring(0, 52) + "...";
+                            }
                             let art_id = article.art_id;
                             return (
                                 <Col sm={6} key={index}>
@@ -73,7 +81,7 @@ export const ManagementPage = (props) => {
                                     <ListGroup.Item style={{ textAlign: 'left', borderRadius: '15px', marginBottom: '10px' }}>
                                         <Row>
                                             <Col>
-                                                <h5>{title}</h5>
+                                                <h5>{item_title}</h5>
                                             </Col>
                                             <Col sm={3} className="d-flex align-items-start justify-content-end">
                                                 <Button variant="danger" size="sm" style={{ marginRight: '1em' }} onClick={() => handleDelete(art_id)}>
@@ -88,7 +96,7 @@ export const ManagementPage = (props) => {
                                         <Row>
                                             <Col>
                                                 <p>{date}</p>
-                                                <p>{description}</p>
+                                                <p>{item_description}</p>
                                                 {article.tags.split(',').map((tag, index) => (
                                                     <Badge key={index} variant="primary" className="mr-2" style={{ marginRight: '1em' }}>
                                                         {tag.trim()}

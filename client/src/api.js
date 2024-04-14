@@ -23,8 +23,8 @@ async function getTags() {
 };
 
 async function getMyArticles(id) {
-    // call: GET /api/articles/:id
-    const response = await fetch(BASEURL + '/articles/' + id);
+    // call: GET /api/users/:id/articles
+    const response = await fetch(BASEURL + '/users/' + id + '/articles');
     const myArticlesJson = await response.json();
     if (response.ok) {
         return myArticlesJson;
@@ -33,15 +33,26 @@ async function getMyArticles(id) {
     }
 };
 
+async function getArticleById(art_id) {
+    // call: GET /api/articles/:art_id
+    const response = await fetch(BASEURL + '/articles/' + art_id);
+    const myArticleJson = await response.json();
+    if (response.ok) {
+        return myArticleJson;
+    } else {
+        throw myArticleJson;
+    }
+};
+
 async function addArticle(usr_id, content, date, tags, description) {
-    //call: POST /api/articles
+    //call: POST /api/users/:usr_id/articles
     return new Promise((resolve, reject) => {
-        fetch(BASEURL + '/articles', {
+        fetch(BASEURL + '/users/' + usr_id + '/articles', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ usr_id: usr_id, content: content, date: date, tags: tags, description: description }),
+            body: JSON.stringify({ content: content, date: date, tags: tags, description: description }),
         }).then((response) => {
             if (response.ok) {
                 resolve(null);
@@ -55,9 +66,9 @@ async function addArticle(usr_id, content, date, tags, description) {
 }
 
 async function deleteMyArticle(usr_id, art_id) {
-    //call: DELETE /api/articles
+    //call: DELETE /api/users/:usr_id/articles/:art_id
     return new Promise((resolve, reject) => {
-        fetch(BASEURL + '/articles/' + usr_id + '/' + art_id, {
+        fetch(BASEURL + '/users/' + usr_id + '/articles/' + art_id, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -119,5 +130,5 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles, deleteMyArticle };
+const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles, deleteMyArticle, getArticleById };
 export default api;
