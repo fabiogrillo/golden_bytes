@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Container, Button, Badge, Row, Col, Form, Alert } from "react-bootstrap"
 import { ArrowCounterclockwise, ArrowLeft, ArrowLeftRight, ArrowRight } from "react-bootstrap-icons";
 import ReactQuill from "react-quill";
@@ -59,9 +60,30 @@ export const WriteComponent = (props) => {
     const [jsonContent, setJsonContent] = useState({});
     const [alertMsg, setAlertMsg] = useState('');
     const [show, setShow] = useState(false);
+    const [articleToModify, setArticleToModify] = useState({});
 
     const user = props.user;
     const loggedIn = props.loggedIn;
+    const toModifyId = props.toModify;
+
+    useEffect(() => {
+        if (toModifyId) {
+            const getArticleById = async () => {
+                try {
+                    const article = await api.getArticleById(toModifyId);
+                    setArticleToModify(article);
+                } catch (err) {
+                    setMessage({
+                        msg: "Cannot retrieve the specified article!",
+                        type: "danger"
+                    });
+                    console.error(message);
+                }
+            }
+            getArticleById();
+        }
+    }, [toModifyId, message]);
+
 
     useEffect(() => {
         if (!first) {
@@ -178,7 +200,12 @@ export const WriteComponent = (props) => {
                                 </div>
                                 <ReactQuill theme="snow" modules={modules} style={{ marginTop: '1.5em', backgroundColor: 'white' }}
                                     formats={formats} placeholder="Insert text here..." ref={quillRef} />
-                                <div style={{ display: 'flex', justifyContent: 'end', marginTop: '2em' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2em' }}>
+                                    <Link to={"/personal-area"}>
+                                        <Button variant="warning">
+                                            <ArrowLeft /> Back
+                                        </Button>
+                                    </Link>
                                     <Button variant="success" onClick={handleSubmit}>
                                         Next <ArrowRight />
                                     </Button>

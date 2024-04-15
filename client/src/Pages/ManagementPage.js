@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Container, ListGroup, Col, Row, Badge } from "react-bootstrap";
 import api from "../api";
-import { PencilSquare, Trash } from "react-bootstrap-icons";
+import { ArrowLeft, PencilSquare, Trash } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 
 export const ManagementPage = (props) => {
     const name = props.user.name;
@@ -66,7 +67,7 @@ export const ManagementPage = (props) => {
                             let title = JSON.parse(article.content).ops[0].insert.trim();
                             let item_title = title;
                             if (title.length > 35) {
-                                item_title = title.substring(0, 35) + "...";
+                                item_title = title.substring(0, 30) + "...";
                             }
                             let date = new Date(article.date.slice(0, 4), article.date.slice(4, 6) - 1, article.date.slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: 'numeric' });
                             let description = article.description.length > 100 ? article.description.substring(0, 50) + "..." : article.description;
@@ -87,9 +88,11 @@ export const ManagementPage = (props) => {
                                                 <Button variant="danger" size="sm" style={{ marginRight: '1em' }} onClick={() => handleDelete(art_id)}>
                                                     <Trash />
                                                 </Button>
-                                                <Button variant="warning" size="sm">
-                                                    <PencilSquare />
-                                                </Button>
+                                                <Link to={"/write-article"}>
+                                                    <Button variant="warning" size="sm" onClick={() => props.setToModify(art_id)}>
+                                                        <PencilSquare />
+                                                    </Button>
+                                                </Link>
                                             </Col>
                                         </Row>
                                         <hr />
@@ -112,6 +115,13 @@ export const ManagementPage = (props) => {
                     </Row>
                 ))}
             </ListGroup >
+            <div className="text-start" style={{ marginTop: "2em" }}>
+                <Link to={"/personal-area"}>
+                    <Button variant="warning">
+                        <ArrowLeft /> Back
+                    </Button>
+                </Link>
+            </div>
         </Container >
 
 

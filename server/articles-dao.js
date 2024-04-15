@@ -47,7 +47,7 @@ exports.getMyArticles = (id) => {
 // GET article info by its id
 exports.getArticleById = (art_id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM articles WHERE art_id = ?';
+        const sql = 'SELECT a.*, u.name FROM articles a INNER JOIN users u ON a.usr_id = u.id WHERE art_id = ?';
         db.get(sql, [art_id], (err, row) => {
             if (err) {
                 reject(err);
@@ -63,6 +63,7 @@ exports.getArticleById = (art_id) => {
                     date: row.date,
                     tags: row.tags,
                     description: row.description,
+                    name: row.name,
                 };
                 resolve(myArticle);
             }

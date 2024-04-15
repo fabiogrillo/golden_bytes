@@ -5,7 +5,8 @@ export const WritePage = (props) => {
         <>
             <WriteComponent
                 user={props.user}
-                loggedIn={props.loggedIn} />
+                loggedIn={props.loggedIn}
+                toModify={props.toModify} />
             <div className="fade-in" style={{ display: 'flex', justifyContent: 'center', marginTop: '3em' }}>
                 <img src={require("../Pictures/writing.png")} alt="" style={{ height: '10em', borderRadius: '5em', boxShadow: '0px 10px 15px rgba(0,0,0,0.1)' }} />
             </div>

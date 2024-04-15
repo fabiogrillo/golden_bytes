@@ -17,6 +17,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
+  const [toModify, setToModify] = useState(null);
 
   // User info if already logged in
   useEffect(() => {
@@ -86,7 +87,8 @@ function App() {
           <Route path='/write-article' element={
             <WritePage
               user={user}
-              loggedIn={loggedIn} />
+              loggedIn={loggedIn}
+              toModify={toModify} />
           } />
 
           <Route path='/personal-area' element={
@@ -97,7 +99,8 @@ function App() {
           <Route path='/articles-manager' element={
             <ManagementPage
               user={user}
-              loggedIn={loggedIn} />
+              loggedIn={loggedIn}
+              setToModify={setToModify} />
           } />
 
           <Route path='/articles/:art_id' element={
