@@ -1,5 +1,5 @@
 import { Row, Button, Container, Form, InputGroup, Col, Nav } from 'react-bootstrap';
-import { Search } from 'react-bootstrap-icons';
+import { Github, Instagram, Linkedin, Search } from 'react-bootstrap-icons';
 
 export const LandingPage = () => {
     const firstLine = "Golden Bytes is my personal blog where I share my journey through various aspects of life.";
@@ -19,7 +19,41 @@ export const LandingPage = () => {
                     </Col>
                 </Row>
             </Container>
-            <Container>
+            <Container className='fade-in' style={{ marginTop: '2em' }}>
+                <Row className='text-center'>
+                    <Col className='social-button' style={{
+                        backgroundColor: '#0E76A8',
+                        borderRadius: '10px',
+                        marginRight: '5em',
+                        color: 'white',
+                        padding: '0.5em'
+                    }}>
+                        <a href='https://www.linkedin.com/in/fabgrillo/' target='_blank' rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none' }}>
+                            <Linkedin /> LinkedIn
+                        </a>
+                    </Col>
+                    <Col className='social-button' style={{
+                        background: 'black',
+                        borderRadius: '10px',
+                        color: 'white',
+                        marginRight: '5em',
+                        padding: '0.5em'
+                    }}>
+                        <a href='https://github.com/fabiogrillo' target='_blank' rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none' }}>
+                            <Github /> Github
+                        </a>
+                    </Col>
+                    <Col className='social-button' style={{
+                        background: 'linear-gradient(to right, #515BD4, #8134AF, #DD2A7B, #FEDA77, #F58529)',
+                        borderRadius: '10px',
+                        color: 'white',
+                        padding: '0.5em'
+                    }}>
+                        <a href='https://www.instagram.com/fabio.grillo_?utm_source=qr&igsh=MXVocGI5YTY1Y3I5dQ==' target='_blank' rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'none' }}>
+                            <Instagram /> Instagram
+                        </a>
+                    </Col>
+                </Row>
                 <Row className="d-flex justify-content-center" style={{ marginTop: '3em' }}>
                     <InputGroup className="mb-3" style={{ maxWidth: '300px', maxHeight: '10px', borderRadius: '20px' }} >
                         <Form.Control type="text" placeholder="Search Keyword" className="mr-sm-2" style={{ borderRadius: '20px' }} />
@@ -43,7 +77,9 @@ export const LandingPage = () => {
                         </Nav>
                     </Container>
                 </Row>
+
             </Container>
+
         </>
     );
 };

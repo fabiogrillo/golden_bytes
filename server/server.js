@@ -115,7 +115,7 @@ app.get('/api/articles/:art_id', [check('art_id').isInt({ min: 1, max: 500 })],
 
 // DELETE /api/users/:usr_id/articles/:art_id
 app.delete('/api/users/:usr_id/articles/:art_id', isLoggedIn,
-  [check('usr_id').isInt({ min: 1, max: 10 }), check('art_id').isInt({ min: 1, max: 1000 })],
+  [check('usr_id').isInt({ min: 1, max: 10 }), check('art_id').isInt({ min: 1})],
   async (req, res) => {
     try {
       const result = await articlesDao.deleteUserArticle(req.params.usr_id, req.params.art_id);
@@ -157,6 +157,37 @@ app.post('/api/users/:usr_id/articles', isLoggedIn, [
     res.status(500).json({ error: `Server error during the creation of article...` });
   }
 });
+
+// PUT /api/users/:usr_id/articles/:art_id
+app.put('/api/users/:usr_id/articles/:art_id', isLoggedIn, [
+  check('usr_id').isInt({ min: 1, max: 10 }),
+  check('art_id').isInt({ min: 1 }),
+  // add validation on content
+  check('date').matches(/^[0-9]{8}$/).withMessage('Date format must be "yyyymmdd"'),
+  check('tags').custom((value) => {
+    // check tags is a single string
+    if (typeof value !== 'string') {
+      throw new Error('Tags must be a single string');
+    }
+    if (value.length > 50) {
+      throw new Error('Tags must not exceed 50 characters');
+    }
+    return true;
+  }),
+  check('description').isLength({ min: 20, max: 500 })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+    await articlesDao.updateArticle(req.params.art_id, req.user.id, req.body.content, req.body.date, req.body.tags, req.body.description);
+    res.status(200).end();
+  } catch (err) {
+    res.status(500).json({ error: `Server error during the update of the article...` });
+  }
+});
+
 
 /*** Users APIs ***/
 

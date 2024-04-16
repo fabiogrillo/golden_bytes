@@ -72,6 +72,22 @@ export const WriteComponent = (props) => {
                 try {
                     const article = await api.getArticleById(toModifyId);
                     setArticleToModify(article);
+
+                    // Set Quill content
+                    if (article && article.content) {
+                        const quill = quillRef.current.getEditor(); // Obtain Quill instance
+                        const delta = JSON.parse(article.content); // Convert string back to Delta
+                        quill.setContents(delta.ops); // Set Quill content
+                    }
+
+                    if (article && article.tags) {
+                        const articleTags = article.tags.split(',').map(tag => ({ name: tag.trim() }));
+                        setSelectedTags(articleTags);
+                    }
+
+                    if (article && article.description) {
+                        setDescription(article.description);
+                    }
                 } catch (err) {
                     setMessage({
                         msg: "Cannot retrieve the specified article!",
@@ -165,19 +181,28 @@ export const WriteComponent = (props) => {
     }
 
     useEffect(() => {
-        const addArticle = async () => {
-            await api.addArticle(user.id, jsonContent, date, stringTags, description);
-        };
-        if (loggedIn && finished) {
-            addArticle().then().catch((err) => {
+        const saveArticle = async () => {
+            try {
+                if (articleToModify) {
+                    // Update existing article
+                    await api.updateArticle(toModifyId, user.id, jsonContent, date, stringTags, description);
+                } else {
+                    // Add new article
+                    await api.addArticle(user.id, jsonContent, date, stringTags, description);
+                }
+            } catch (err) {
                 setMessage({
-                    msg: "Impossible to create the article. Try later.",
+                    msg: "Impossible to save the article. Try later.",
                     type: "danger",
                 });
                 console.error(err);
-            });
+            }
         };
-    }, [finished, jsonContent]);
+
+        if (loggedIn && finished) {
+            saveArticle();
+        }
+    }, [finished, jsonContent, articleToModify]);
 
     return (
         <Container className="fade-in">
@@ -230,7 +255,7 @@ export const WriteComponent = (props) => {
                                     {'Available tags:'}
                                 </div>
                                 <div>
-                                    {tags.map((tag, index) => (
+                                    {tags.filter(tag => !selectedTags.includes(tag)).map((tag, index) => (
                                         <Badge pill bg="primary" onClick={() => handleTagClick(tag)} key={index} style={{ cursor: 'pointer', margin: '0.5em', padding: '0.5em', fontSize: '1.5em' }}>
                                             {tag.name}
                                         </Badge>
@@ -284,7 +309,7 @@ export const WriteComponent = (props) => {
                         <Row>
                             <Form>
                                 <Form.Group className="mb-3">
-                                    <Form.Control type="text" rows={3} placeholder="Tetx here..." required onChange={e => setDescription(e.target.value)}
+                                    <Form.Control type="text" rows={3} placeholder="Tetx here..." required value={description} onChange={e => setDescription(e.target.value)}
                                         isInvalid={description.length < 50 || description.length > 200}
                                         isValid={description.length >= 50 && description.length <= 200} />
                                     <Form.Control.Feedback type="invalid">Must insert min 50 characters max 200 characters</Form.Control.Feedback>

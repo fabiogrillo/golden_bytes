@@ -121,6 +121,20 @@ exports.createArticle = (usr_id, content, date, tags, description) => {
     });
 };
 
+// update an existing article
+exports.updateArticle = (art_id, usr_id, content, date, tags, description) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'UPDATE articles SET usr_id = ?, content = ?, date = ?, tags = ?, description = ? WHERE art_id = ?';
+        db.run(sql, [usr_id, content, date, tags, description, art_id], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(this.changes);
+        });
+    });
+};
+
 // delete a user's article
 exports.deleteUserArticle = (usr_id, art_id) => {
     return new Promise((resolve, reject) => {

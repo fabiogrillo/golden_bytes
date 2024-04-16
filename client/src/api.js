@@ -63,7 +63,28 @@ async function addArticle(usr_id, content, date, tags, description) {
             }
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
     });
-}
+};
+
+async function updateArticle(art_id, usr_id, content, date, tags, description) {
+    // call: PUT /api/users/:usr_id/articles/:art_id
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/users/' + usr_id + '/articles/' + art_id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content: content, date: date, tags: tags, description: description }),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+};
 
 async function deleteMyArticle(usr_id, art_id) {
     //call: DELETE /api/users/:usr_id/articles/:art_id
@@ -130,5 +151,5 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles, deleteMyArticle, getArticleById };
+const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles, deleteMyArticle, getArticleById, updateArticle };
 export default api;
