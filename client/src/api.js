@@ -65,6 +65,28 @@ async function addArticle(usr_id, content, date, tags, description) {
     });
 };
 
+async function addGoal(description, total_steps, current_step) {
+    //call: POST /api/goals
+    console.log("dentro api" + description, total_steps, current_step)
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/goals', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ description: description, total_steps: total_steps, current_step: current_step }),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+};
+
 async function updateArticle(art_id, usr_id, content, date, tags, description) {
     // call: PUT /api/users/:usr_id/articles/:art_id
     return new Promise((resolve, reject) => {
@@ -105,6 +127,17 @@ async function deleteMyArticle(usr_id, art_id) {
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
     });
 }
+
+async function getGoals() {
+    // call: GET /api/goals/
+    const response = await fetch(BASEURL + '/goals');
+    const goalsJson = await response.json();
+    if (response.ok) {
+        return goalsJson;
+    } else {
+        throw goalsJson;
+    }
+};
 
 // API Login & Logout
 async function logIn(credentials) {
@@ -151,5 +184,9 @@ async function getUserInfo() {
     });
 }
 
-const api = { getArticles, getTags, logIn, logOut, getUserInfo, addArticle, getMyArticles, deleteMyArticle, getArticleById, updateArticle };
+const api = {
+    getArticles, getTags, logIn, logOut, getUserInfo,
+    addArticle, getMyArticles, deleteMyArticle, getArticleById,
+    updateArticle, getGoals, addGoal
+};
 export default api;

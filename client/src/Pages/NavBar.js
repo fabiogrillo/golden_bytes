@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-import { Book, BoxArrowLeft, CloudCheck, InfoCircle, PersonCircle } from 'react-bootstrap-icons';
+import { Book, BoxArrowLeft, Check2Circle, CloudCheck, PersonCircle } from 'react-bootstrap-icons';
 
 const NavBar = (props) => {
     return (
@@ -14,6 +14,9 @@ const NavBar = (props) => {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ borderColor: 'var(--selective-yellow)' }} />
                     <Navbar.Collapse id='basic-navbar-nav'>
                         <Nav className='me-auto d-flex justify-content-end' style={{ marginLeft: 'auto' }}>
+                            <Nav.Link href='personal-goals' style={{ color: 'var(--selective-yellow)', fontSize: '1.1em' }}>
+                                <Check2Circle />{' '}Goals
+                            </Nav.Link>
                             <Nav.Link href="/articles" style={{ color: 'var(--selective-yellow)', fontSize: '1.1em' }}>
                                 <Book />{' '}Articles
                             </Nav.Link>

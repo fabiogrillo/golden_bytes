@@ -12,6 +12,7 @@ import api from './api';
 import WritePage from './Pages/WritePage';
 import ManagementPage from './Pages/ManagementPage';
 import ArticleVisualizer from './Pages/ArticleVisualizerPage';
+import GoalsPage from './Pages/GoalsPage';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -106,6 +107,14 @@ function App() {
           <Route path='/articles/:art_id' element={
             <ArticleVisualizer />
           } />
+
+          <Route path='/personal-goals' element={
+            <GoalsPage
+              user={user}
+              loggedIn={loggedIn}
+            />
+          }
+          />
 
         </Routes>
         <Footer />

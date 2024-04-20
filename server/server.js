@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const articlesDao = require('./articles-dao');
+const goalsDao = require('./goals-dao');
 const usersDao = require('./users-dao');
 const { check, validationResult } = require('express-validator');
 const passport = require('passport');
@@ -83,6 +84,19 @@ app.get('/api/tags', async (req, res) => {
   }
 });
 
+// GET /api/goals
+app.get('/api/goals', async (req, res) => {
+  try {
+    const goals = await goalsDao.listGoals();
+    if (goals.err)
+      res.status(404).json(goals)
+    else
+      res.json(goals);
+  } catch (err) {
+    res.status(500).end();
+  }
+});
+
 // GET /api/users/:id/articles
 app.get('/api/users/:id/articles', isLoggedIn,
   [check('id').isInt({ min: 1, max: 5 })],
@@ -115,7 +129,7 @@ app.get('/api/articles/:art_id', [check('art_id').isInt({ min: 1, max: 500 })],
 
 // DELETE /api/users/:usr_id/articles/:art_id
 app.delete('/api/users/:usr_id/articles/:art_id', isLoggedIn,
-  [check('usr_id').isInt({ min: 1, max: 10 }), check('art_id').isInt({ min: 1})],
+  [check('usr_id').isInt({ min: 1, max: 10 }), check('art_id').isInt({ min: 1 })],
   async (req, res) => {
     try {
       const result = await articlesDao.deleteUserArticle(req.params.usr_id, req.params.art_id);
@@ -155,6 +169,29 @@ app.post('/api/users/:usr_id/articles', isLoggedIn, [
     res.status(201).end();
   } catch (err) {
     res.status(500).json({ error: `Server error during the creation of article...` });
+  }
+});
+
+// POST /api/goals
+app.post('/api/goals', isLoggedIn, [
+  check('description').isLength({ min: 10, max: 100 }),
+  check('total_steps').isInt({ min: 1, max: 20 }),
+  check('current_step').isInt({ min: 0, max: 20 }).custom((value, { req }) => {
+    if (value > req.body.total_steps) {
+      throw new Error('Current step cannot be greater than total steps!');
+    }
+    return true;
+  }),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+    await goalsDao.addGoal(req.body.description, req.body.total_steps, req.body.current_step);
+    res.status(201).end();
+  } catch (err) {
+    res.status(500).json({ error: `Server error during the creation of goal...` });
   }
 });
 
