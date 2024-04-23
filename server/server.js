@@ -126,6 +126,19 @@ app.get('/api/articles/:art_id', [check('art_id').isInt({ min: 1, max: 500 })],
     };
   });
 
+// GET api/goals/:goal_id
+app.get('/api/goals/:goal_id', isLoggedIn, [check('goal_id').isInt({ min: 1, max: 100 })],
+  async (req, res) => {
+    try {
+      const myGoal = await goalsDao.getGoalById(req.params.goal_id);
+      if (myGoal.err)
+        res.status(404).json(myGoal);
+      else
+        res.json(myGoal);
+    } catch (err) {
+      res.status(500).end();
+    };
+  });
 
 // DELETE /api/users/:usr_id/articles/:art_id
 app.delete('/api/users/:usr_id/articles/:art_id', isLoggedIn,
@@ -141,6 +154,19 @@ app.delete('/api/users/:usr_id/articles/:art_id', isLoggedIn,
       res.status(500).end();
     };
   });
+
+// DELETE /api/goals/:goal_id
+app.delete('/api/goals/:goal_id', isLoggedIn, async (req, res) => {
+  try {
+    const result = await goalsDao.deleteGoal(req.params.goal_id);
+    if (result.err)
+      res.status(404).json(result);
+    else
+      res.json({ message: "Goal deleted succesfully." });
+  } catch (err) {
+    res.status(500).end();
+  };
+});
 
 // POST /api/users/:usr_id/articles
 app.post('/api/users/:usr_id/articles', isLoggedIn, [
@@ -182,13 +208,22 @@ app.post('/api/goals', isLoggedIn, [
     }
     return true;
   }),
+  check('start_date').matches(/^\d{8}$/).custom((value) => {
+    const startDate = new Date(value.slice(0, 4), parseInt(value.slice(4, 6)) - 1, value.slice(6, 8));
+    const januaryFirst2000 = new Date('2000-01-01');
+    if (startDate < januaryFirst2000) {
+      throw new Error('Start date must be after or equal to January 1, 2000');
+    }
+    return true;
+  }),
+  check('additional_info').optional().isLength({ max: 300 })
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    await goalsDao.addGoal(req.body.description, req.body.total_steps, req.body.current_step);
+    await goalsDao.addGoal(req.body.description, req.body.total_steps, req.body.current_step, req.body.start_date, req.body.additional_info);
     res.status(201).end();
   } catch (err) {
     res.status(500).json({ error: `Server error during the creation of goal...` });
@@ -225,6 +260,30 @@ app.put('/api/users/:usr_id/articles/:art_id', isLoggedIn, [
   }
 });
 
+// PUT /api/goals/:goal_id
+app.put('/api/goals/:goal_id', isLoggedIn, [
+  check('goal_id').isInt({ min: 1, max: 100 })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  const { description, total_steps, current_step, start_date, additional_info } = req.body;
+  const goal_id = req.params.goal_id;
+
+  try {
+    const rowsAffected = await goalsDao.updateGoal(goal_id, description, total_steps, current_step, start_date, additional_info);
+    if (rowsAffected > 0) {
+      res.status(200).json({ message: "Goal updated successfully" });
+    } else {
+      res.status(404).json({ error: "Goal not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error during the update of the article" });
+  }
+});
 
 /*** Users APIs ***/
 

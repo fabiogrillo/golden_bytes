@@ -76,7 +76,7 @@ async function addArticle(usr_id, content, date, tags, description) {
     });
 };
 
-async function addGoal(description, total_steps, current_step) {
+async function addGoal(description, total_steps, current_step, start_date, additional_info) {
     //call: POST /api/goals
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/goals', {
@@ -84,7 +84,10 @@ async function addGoal(description, total_steps, current_step) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ description: description, total_steps: total_steps, current_step: current_step }),
+            body: JSON.stringify({
+                description: description, total_steps: total_steps, current_step: current_step,
+                start_date: start_date, additional_info: additional_info
+            }),
         }).then((response) => {
             if (response.ok) {
                 resolve(null);
@@ -118,7 +121,7 @@ async function updateArticle(art_id, usr_id, content, date, tags, description) {
     });
 };
 
-async function updateGoal(goal_id, description, total_steps, current_step) {
+async function updateGoal(goal_id, description, total_steps, current_step, start_date, additional_info) {
     // call: PUT /api/goals/:goal_id
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/goals/' + goal_id, {
@@ -126,7 +129,10 @@ async function updateGoal(goal_id, description, total_steps, current_step) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ description: description, total_steps: total_steps, current_step: current_step }),
+            body: JSON.stringify({
+                description: description, total_steps: total_steps, current_step: current_step,
+                start_date: start_date, additional_info: additional_info
+            }),
         }).then((response) => {
             if (response.ok) {
                 resolve(null);

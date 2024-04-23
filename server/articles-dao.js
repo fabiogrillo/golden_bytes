@@ -71,7 +71,6 @@ exports.getArticleById = (art_id) => {
     });
 };
 
-
 // get users
 exports.listUsers = () => {
     return new Promise((resolve, reject) => {

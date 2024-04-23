@@ -153,15 +153,3 @@ body {
 .social-button:hover {
   animation: tada 1.5s infinite;
 }
-
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: var(--prussian-blue);
-  color: var(--selective-yellow);
-  font-size: 1.2em;
-  padding: 0.8em;
-  text-align: center;
-}

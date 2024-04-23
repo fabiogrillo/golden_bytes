@@ -12,6 +12,8 @@ function GoalsPage(props) {
     const [goalDescription, setGoalDescription] = useState('');
     const [goalTotalSteps, setGoalTotalSteps] = useState('');
     const [goalCurrentStep, setGoalCurrentStep] = useState('');
+    const [goalStartDate, setGoalStartDate] = useState(new Date());
+    const [goalAdditionalInfo, setGoalAdditionalInfo] = useState('');
     const [finished, setFinished] = useState(false);
     const [goalIdToDelete, setGoalIdToDelete] = useState('');
     const [deleteSelected, setDeleteSelected] = useState(false);
@@ -25,9 +27,10 @@ function GoalsPage(props) {
         setGoalDescription('');
         setGoalCurrentStep('');
         setGoalTotalSteps('');
+        setGoalStartDate(new Date());
+        setGoalAdditionalInfo('');
     };
     const handleShow = () => setShow(true);
-
 
     useEffect(() => {
         const getGoals = async () => {
@@ -66,7 +69,7 @@ function GoalsPage(props) {
     useEffect(() => {
         const addGoal = async () => {
             try {
-                await api.addGoal(goalDescription, goalTotalSteps, goalCurrentStep);
+                await api.addGoal(goalDescription, goalTotalSteps, goalCurrentStep, goalStartDate, goalAdditionalInfo);
                 setMessage({
                     msg: "Goal added successfully",
                     type: "success",
@@ -74,6 +77,8 @@ function GoalsPage(props) {
                 setGoalDescription('');
                 setGoalCurrentStep('');
                 setGoalTotalSteps('');
+                setGoalStartDate(new Date());
+                setGoalAdditionalInfo('');
                 setFinished(false);
             } catch (err) {
                 console.error(err);
@@ -83,15 +88,15 @@ function GoalsPage(props) {
                 });
             }
         };
-        if (loggedIn && finished && goalDescription && goalTotalSteps && goalCurrentStep) {
+        if (loggedIn && finished && goalDescription && goalTotalSteps && goalCurrentStep && goalStartDate && goalAdditionalInfo) {
             addGoal();
         }
-    }, [finished, goalDescription, goalTotalSteps, goalCurrentStep, loggedIn]);
+    }, [finished, goalDescription, goalTotalSteps, goalCurrentStep, goalStartDate, goalAdditionalInfo, loggedIn]);
 
     useEffect(() => {
         const editGoal = async () => {
             try {
-                await api.updateGoal(goalIdToEdit, goalDescription, goalTotalSteps, goalCurrentStep);
+                await api.updateGoal(goalIdToEdit, goalDescription, goalTotalSteps, goalCurrentStep, goalStartDate, goalAdditionalInfo);
                 setMessage({
                     msg: "Goal added successfully",
                     type: "success",
@@ -99,6 +104,8 @@ function GoalsPage(props) {
                 setGoalDescription('');
                 setGoalCurrentStep('');
                 setGoalTotalSteps('');
+                setGoalStartDate(new Date());
+                setGoalAdditionalInfo('');
                 setFinishedEited(false);
             } catch (err) {
                 console.error(err);
@@ -108,10 +115,10 @@ function GoalsPage(props) {
                 });
             }
         };
-        if (loggedIn && finishedEdited && goalDescription && goalTotalSteps && goalCurrentStep) {
+        if (loggedIn && finishedEdited && goalDescription && goalTotalSteps && goalCurrentStep && goalStartDate && goalAdditionalInfo) {
             editGoal();
         }
-    }, [finishedEdited, goalIdToEdit, goalDescription, goalTotalSteps, goalCurrentStep, loggedIn]);
+    }, [finishedEdited, goalIdToEdit, goalDescription, goalTotalSteps, goalCurrentStep, goalStartDate, goalAdditionalInfo, loggedIn]);
 
 
     const handleSubmit = (event) => {
@@ -124,6 +131,17 @@ function GoalsPage(props) {
             setGoalDescription(form.formGoalDescription.value);
             setGoalTotalSteps(parseInt(form.formGoalTotal.value));
             setGoalCurrentStep(parseInt(form.formGoalCurrent.value));
+
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            let month = currentDate.getMonth() + 1;
+            let day = currentDate.getDate();
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+            const formattedDate = `${year}${month}${day}`;
+
+            setGoalStartDate(formattedDate);
+            setGoalAdditionalInfo(form.formGoalAdditionalInfo.value);
             setShow(false);
             setFinished(true);
         }
@@ -139,6 +157,8 @@ function GoalsPage(props) {
             setGoalDescription(form.formGoalDescription.value);
             setGoalTotalSteps(parseInt(form.formGoalTotal.value));
             setGoalCurrentStep(parseInt(form.formGoalCurrent.value));
+            setGoalStartDate(form.formGoalStartDate.value);
+            setGoalAdditionalInfo(form.formGoalAdditionalInfo.value);
             setEditSelected(false);
             setFinishedEited(true);
         }
@@ -179,7 +199,7 @@ function GoalsPage(props) {
 
     return (
         <Container className='fade-in text-center' style={{ marginTop: '3em' }}>
-            <Card style={{ backgroundColor: '#FCF8F1', borderRadius: '15px', padding: '2em', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.9)', alignItems:'center' }}>
+            <Card style={{ backgroundColor: '#FCF8F1', borderRadius: '15px', padding: '2em', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.9)', alignItems: 'center' }}>
                 <Card.Title style={{ fontSize: '2.5rem', marginBottom: '1em', fontWeight: 'bold', color: '#333' }}>
                     The Voyage
                 </Card.Title>
@@ -190,9 +210,9 @@ function GoalsPage(props) {
                     As I navigate this sea of possibilities, I celebrate every milestone—a beacon of hope and progress.
                     Join me as we chart our course, one beautiful stride at a time.
                 </Card.Text>
-                <Image roundedCircle src={require('../Pictures/the_voyage_bg.jpeg')} style={{width: '20%', height:'auto'}} />
+                <Image roundedCircle src={require('../Pictures/the_voyage_bg.jpeg')} style={{ width: '20%', height: 'auto' }} />
             </Card>
-            <Row style={{justifyContent:'center', fontSize:'2em', fontFamily:'unset', marginTop:"2em"}}>
+            <Row style={{ justifyContent: 'center', fontSize: '2em', fontFamily: 'unset', marginTop: "2em" }}>
                 Ongoing tasks
             </Row>
 
@@ -212,7 +232,14 @@ function GoalsPage(props) {
                 const randomColor = colors[Math.floor(Math.random() * colors.length)];
                 return (
                     <Container className='fade-in' style={{ marginTop: '2em', textAlign: 'left', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', borderRadius: '15px', padding: '1em', backgroundColor: randomColor }} key={goal.goal_id}>
-                        <p style={{ fontSize: '1.2rem', marginBottom: '0.7em', fontWeight: 'bold', color: '#333' }}>{goal.description}</p>
+                        <Row>
+                            <Col style={{ fontSize: '1.5rem', marginBottom: '0.7em', fontWeight: 'bold', color: '#333' }}>
+                                {goal.description}
+                            </Col>
+                            <Col sm={3} style={{ textAlign: 'end', fontSize: '1.4rem', marginBottom: '0.7em', fontWeight: 'normal', color: '#333' }}>
+                                Started: {new Date(goal.start_date.toString().slice(0, 4), goal.start_date.toString().slice(4, 6) - 1, goal.start_date.toString().slice(6, 8)).toLocaleDateString('en-EN', { year: 'numeric', month: 'long', day: '2-digit' })}
+                            </Col>
+                        </Row>
                         <Row>
                             <Col>
                                 <ProgressBar variant='primary' animated striped now={(goal.current_step / goal.total_steps) * 100} label={`${goal.current_step}/${goal.total_steps}`} style={{ backgroundColor: 'lightgrey' }} />
@@ -228,6 +255,12 @@ function GoalsPage(props) {
                                 </Col>
 
                             ) : null}
+                        </Row>
+                        <br />
+                        <Row>
+                            <Col style={{ fontSize: '1.2rem', fontStyle: 'italic', marginBottom: '0.7em', fontWeight: 'unset', color: '#333' }}>
+                                {goal.additional_info}
+                            </Col>
                         </Row>
                     </Container>
                 )
@@ -271,7 +304,6 @@ function GoalsPage(props) {
 
                                 </Form.Group>
                                 <br />
-
                                 <Form.Group controlId='formGoalCurrent'>
                                     <Form.Label>Current Step</Form.Label>
                                     <Form.Control required type='number' placeholder='Enter the current step of development'
@@ -281,9 +313,30 @@ function GoalsPage(props) {
                                         isValid={goalTotalSteps >= 0 || goalCurrentStep <= goalTotalSteps}
                                         isInvalid={goalCurrentStep > goalTotalSteps} />
                                     <Form.Control.Feedback type='invalid'>The current step must be below {goalTotalSteps}</Form.Control.Feedback>
-
                                 </Form.Group>
                                 <br />
+                                <Form.Group controlId='formGoalAdditionalInfo'>
+                                    <Form.Label>Additional Info</Form.Label>
+                                    <Form.Control type='text' placeholder='Add here additional info about the goal'
+                                        defaultValue={goalToEditInfo.additional_info}
+                                        onChange={e => setGoalAdditionalInfo(e.target.value)}
+                                        isInvalid={goalAdditionalInfo.length > 300}
+                                    />
+                                    <Form.Control.Feedback type='invalid'>Maximum length exceeded (300 characters)!</Form.Control.Feedback>
+                                </Form.Group>
+                                <br />
+                                <Form.Group controlId='formGoalStartDate'>
+                                    <Form.Label>Start Date</Form.Label>
+                                    <Form.Control required type='number'
+                                        min={20000101}
+                                        defaultValue={goalToEditInfo.start_date}
+                                        onChange={e => setGoalStartDate(e.target.value)}
+                                        isInvalid={goalStartDate < 20000101 }
+                                    />
+                                    <Form.Control.Feedback type='invalid'>Insert a date after 2000, 01, 01!</Form.Control.Feedback>
+
+                                </Form.Group>
+                                <br/>
                                 <div className='text-center'>
                                     <Button variant='warning' type='submit'>
                                         <PencilFill /> Edit
@@ -294,7 +347,7 @@ function GoalsPage(props) {
                     </Modal>
                 ) : (
                     <>
-                        <Row style={{ marginTop: '3em', fontSize:'1.1em' }}>
+                        <Row style={{ marginTop: '3em', fontSize: '1.1em' }}>
                             <Col>
                                 <p>
                                     Want to add a new goal?
@@ -337,10 +390,8 @@ function GoalsPage(props) {
                                             isValid={goalTotalSteps >= 1 && goalTotalSteps <= 20}
                                         />
                                         <Form.Control.Feedback type='invalid'>Insert a number between 1 and 20!</Form.Control.Feedback>
-
                                     </Form.Group>
                                     <br />
-
                                     <Form.Group controlId='formGoalCurrent'>
                                         <Form.Label>Current Step</Form.Label>
                                         <Form.Control required type='number' placeholder='Enter the current step of development'
@@ -350,7 +401,16 @@ function GoalsPage(props) {
                                             isValid={goalTotalSteps >= 0 || goalCurrentStep <= goalTotalSteps}
                                             isInvalid={goalCurrentStep > goalTotalSteps} />
                                         <Form.Control.Feedback type='invalid'>The current step must be below {goalTotalSteps}</Form.Control.Feedback>
-
+                                    </Form.Group>
+                                    <br />
+                                    <Form.Group controlId='formGoalAdditionalInfo'>
+                                        <Form.Label>Additional Info</Form.Label>
+                                        <Form.Control type='text' placeholder='Add here additional info about the goal'
+                                            value={goalAdditionalInfo}
+                                            onChange={e => setGoalAdditionalInfo(e.target.value)}
+                                            isInvalid={goalAdditionalInfo.length > 300}
+                                        />
+                                        <Form.Control.Feedback type='invalid'>Maximum length exceeded (300 characters)!</Form.Control.Feedback>
                                     </Form.Group>
                                     <br />
                                     <div className='text-center'>
