@@ -1,23 +1,29 @@
-import { Row, Button, Container, Form, InputGroup, Col, Nav } from 'react-bootstrap';
+import { Row, Button, Container, Form, InputGroup, Col, Nav, Image } from 'react-bootstrap';
 import { Github, Instagram, Linkedin, Search } from 'react-bootstrap-icons';
 
 export const LandingPage = () => {
-    const firstLine = "Golden Bytes is my personal blog where I share my journey through various aspects of life.";
 
 
     return (
         <>
-            <Container className="fade-in" style={{ marginTop: '3em', padding: '20px', backgroundColor: 'var(--sky-blue)', borderRadius: '15px' }}>
-                <Row className="d-flex justify-content-center">
+            <Container className="fade-in" style={{ marginTop: '3em', padding: '20px', backgroundColor: '#E2FBD4', borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.8)' }}>
+                <Row className="d-flex justify-content-center fade-in">
                     <Col md={8}>
-                        <p className="fade-in stylish-text" style={{ color: 'var(--prussian-blue)', fontSize: '1.5em', fontWeight: 'bold', textAlign: 'center' }}>
-                            {firstLine}
+                        <p style={{ color: '#333', fontSize: '2.2rem', fontWeight: 'bold', textAlign: 'center' }}>
+                            Golden Bytes is my personal blog where I share my journey through various aspects of life.
                         </p>
-                        <p className="fade-in stylish-text" style={{ color: 'var(--prussian-blue)', fontSize: '1.1em', fontFamily: 'Arial, sans-serif', textAlign: 'center' }}>
-                            Including my <span style={{ color: 'var(--ut-orange)' }}>exploration of technology</span>, personal finance, reading, and my love for my <span style={{ color: 'var(--ut-orange)' }}>Golden Retriever, Phoebe</span>. It's also a platform where I share my interactions across other platforms, providing an authentic and engaging reflection of my thoughts and experiences.
+                        <p style={{ color: '#666', fontSize: '1.5rem', fontFamily: 'Arial, sans-serif', textAlign: 'center' }}>
+                            Including my exploration of technology,
+                            personal finance, reading, and my love for my Golden Retriever,
+                            Phoebe. It's also a platform where I share my interactions across other platforms,
+                            providing an authentic and engaging reflection of my thoughts and experiences.
                         </p>
                     </Col>
                 </Row>
+                <Row style={{justifyContent:'center'}}>
+                    <Image roundedCircle src={require('../Pictures/landing_bg.jpeg')} style={{ width: '20%', height: 'auto' }} />
+                </Row>
+
             </Container>
             <Container className='fade-in' style={{ marginTop: '2em' }}>
                 <Row className='text-center'>

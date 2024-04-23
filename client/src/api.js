@@ -44,6 +44,17 @@ async function getArticleById(art_id) {
     }
 };
 
+async function getGoalById(goal_id) {
+    // call: GET /api/goals/_goal_id
+    const response = await fetch(BASEURL + '/goals/' + goal_id);
+    const myGoalJson = await response.json();
+    if (response.ok) {
+        return myGoalJson;
+    } else {
+        throw myGoalJson;
+    }
+};
+
 async function addArticle(usr_id, content, date, tags, description) {
     //call: POST /api/users/:usr_id/articles
     return new Promise((resolve, reject) => {
@@ -67,7 +78,6 @@ async function addArticle(usr_id, content, date, tags, description) {
 
 async function addGoal(description, total_steps, current_step) {
     //call: POST /api/goals
-    console.log("dentro api" + description, total_steps, current_step)
     return new Promise((resolve, reject) => {
         fetch(BASEURL + '/goals', {
             method: 'POST',
@@ -108,6 +118,28 @@ async function updateArticle(art_id, usr_id, content, date, tags, description) {
     });
 };
 
+async function updateGoal(goal_id, description, total_steps, current_step) {
+    // call: PUT /api/goals/:goal_id
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/goals/' + goal_id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ description: description, total_steps: total_steps, current_step: current_step }),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+};
+
+
 async function deleteMyArticle(usr_id, art_id) {
     //call: DELETE /api/users/:usr_id/articles/:art_id
     return new Promise((resolve, reject) => {
@@ -126,7 +158,28 @@ async function deleteMyArticle(usr_id, art_id) {
             }
         }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
     });
-}
+};
+
+async function deleteGoal(goal_id) {
+    //call: DELETE /api/goals/:goal_id
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/goals/' + goal_id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+};
+
 
 async function getGoals() {
     // call: GET /api/goals/
@@ -187,6 +240,7 @@ async function getUserInfo() {
 const api = {
     getArticles, getTags, logIn, logOut, getUserInfo,
     addArticle, getMyArticles, deleteMyArticle, getArticleById,
-    updateArticle, getGoals, addGoal
+    updateArticle, getGoals, addGoal, deleteGoal, getGoalById,
+    updateGoal
 };
 export default api;

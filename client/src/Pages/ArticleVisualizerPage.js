@@ -3,7 +3,7 @@ import { Container, Card, Badge, Button } from 'react-bootstrap'
 import api from '../api';
 import { Link, useParams } from 'react-router-dom';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-import { ArrowLeft, Line } from 'react-bootstrap-icons';
+import { ArrowLeft } from 'react-bootstrap-icons';
 
 export const ArticleVisualizer = () => {
     const { art_id } = useParams();
@@ -46,7 +46,7 @@ export const ArticleVisualizer = () => {
     }
 
     return (
-        <Container className='fade-in text-center' style={{ marginTop: '3em' }}>
+        <Container className='fade-in text-center' style={{ marginTop: '3em', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.7)' }}>
             {article.date && article.tags ? (
                 <>
                     <Card>

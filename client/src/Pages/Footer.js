@@ -2,19 +2,21 @@ import { Container, Navbar } from "react-bootstrap";
 import { Github, Instagram, Linkedin } from "react-bootstrap-icons";
 
 export const Footer = () => (
-    <Navbar expand="lg" fixed="bottom" style={{ backgroundColor: 'var(--prussian-blue)' }}>
+    <Navbar className="footer" expand="lg" style={{ backgroundColor: 'var(--prussian-blue)', position:'fixed', bottom:0, width:'100%', zIndex:100 }}>
         <Container className="d-flex justify-content-between">
             <div style={{ color: 'var(--selective-yellow)', fontSize: '0.9em' }}>
-                <a>
-                    <p>© 2024 Golden Bytes.</p>
-                    <p>All rights reserved.</p>
-                </a>
+                <p>
+                    © 2024 Golden Bytes.
+                    <br />
+                    All rights reserved.
+                </p>
             </div>
             <div style={{ color: 'var(--selective-yellow)', fontSize: '0.9em' }}>
-                <a href="/privacy-policy" style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>Privacy Policy</a><br />
-                <a href="/cookie-policy" style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>Cookie Policy</a><br />
-                <a href="/terms-of-service" style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>Terms of Service</a>
+                <a style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>Privacy Policy</a><br />
+                <a style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>Cookie Policy</a><br />
+                <a style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>Terms of Service</a>
             </div>
+
             <div style={{ color: 'var(--selective-yellow)', fontSize: '0.9em' }}>
                 <a href="https://www.linkedin.com/in/fabgrillo/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--selective-yellow)', textDecoration: 'none' }}>
                     <Linkedin /> LinkedIn
@@ -28,6 +30,7 @@ export const Footer = () => (
             </div>
         </Container>
     </Navbar>
+
 );
 
 

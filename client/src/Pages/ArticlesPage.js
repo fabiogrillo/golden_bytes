@@ -36,7 +36,7 @@ function ArticlesPage(props) {
             }
         }
         getArticles();
-    }, []);
+    }, [message]);
 
     useEffect(() => {
         const colors = ['--sky-blue', '--blue-green', '--selective-yellow', '--ut-orange'];
@@ -46,7 +46,7 @@ function ArticlesPage(props) {
 
     return (
         <>
-            <Container className="fade-in text-center container-transition" style={{ marginTop: '3em', padding: '20px', backgroundColor: `var(${currentColor})`, borderRadius: '15px', color: '#FFFFFF' }}>
+            <Container className="fade-in text-center container-transition" style={{ marginTop: '3em', padding: '20px', backgroundColor: `var(${currentColor})`, borderRadius: '15px', color: '#FFFFFF', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.7)' }}>
                 <Carousel activeIndex={index} onSelect={handleSelect} style={{ marginTop: '1em', height: '22em' }}>
                     {articles.slice(0, 3).map((article, index) => {
                         let title = JSON.parse(article.content).ops[0].insert.trim();
@@ -66,7 +66,7 @@ function ArticlesPage(props) {
                                         <Link to={`/articles/${article.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                                             <Row>
                                                 <Col md={6}>
-                                                    <img rounded='true' src={require('../Pictures/welcome_cartoon.jpeg')} text="First slide" style={{ maxHeight: '300px', objectFit: 'contain', borderRadius: '15px' }} />
+                                                    <img alt='description_image' rounded='true' src={require('../Pictures/welcome_cartoon.jpeg')} text="First slide" style={{ maxHeight: '300px', objectFit: 'contain', borderRadius: '15px' }} />
                                                 </Col>
                                                 <Col md={6} style={{ display: 'flex', flexDirection: 'column' }}>
                                                     <Card.Body style={{ textAlign: 'left', flex: '1', maxHeight: '20em', overflow: 'hidden' }}>

@@ -1,7 +1,7 @@
-import { Container, Row, Card, Button, Col, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Card, Button, Col, Form, Modal, ProgressBar, Image } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import api from '../api';
-import { CaretRightFill, Check2All, PencilSquare, PlusCircle, Trash } from 'react-bootstrap-icons';
+import { Check2All, PencilFill, PencilSquare, PlusCircle, Trash } from 'react-bootstrap-icons';
 
 function GoalsPage(props) {
     const loggedIn = props.loggedIn;
@@ -13,6 +13,12 @@ function GoalsPage(props) {
     const [goalTotalSteps, setGoalTotalSteps] = useState('');
     const [goalCurrentStep, setGoalCurrentStep] = useState('');
     const [finished, setFinished] = useState(false);
+    const [goalIdToDelete, setGoalIdToDelete] = useState('');
+    const [deleteSelected, setDeleteSelected] = useState(false);
+    const [editSelected, setEditSelected] = useState(false);
+    const [goalIdToEdit, setGoalIdToEdit] = useState();
+    const [goalToEditInfo, setGoalToEditInfo] = useState();
+    const [finishedEdited, setFinishedEited] = useState(false);
 
     const handleClose = () => {
         setShow(false);
@@ -37,29 +43,76 @@ function GoalsPage(props) {
             }
         }
         getGoals();
-    }, [message]);
-
-    const colors = [
-        "#01497c", "#ff4d6d", "#fdc43f", "#80b918", "#9d6b53",
-        "#a9d6e5", "#ffb3c1", "#ffe94e", "#ffff3f", "#e6b8a2"
-    ];
+    }, [message, goalIdToDelete]);
 
     useEffect(() => {
-        const addGoal = async () => {
+        const getGoal = async () => {
             try {
-                await api.addGoal(goalDescription, goalTotalSteps, goalCurrentStep);
+                const goalEdited = await api.getGoalById(goalIdToEdit);
+                setGoalToEditInfo(goalEdited);
             } catch (err) {
                 setMessage({
-                    msg: "Impossible to add goal. Try later.",
+                    msg: "Cannot retrieve the goal to edit",
                     type: "danger",
                 });
                 console.error(err);
             }
         };
-        if (loggedIn && finished) {
+        if (editSelected && goalIdToEdit) {
+            getGoal();
+        }
+    }, [editSelected, goalIdToEdit]);
+
+    useEffect(() => {
+        const addGoal = async () => {
+            try {
+                await api.addGoal(goalDescription, goalTotalSteps, goalCurrentStep);
+                setMessage({
+                    msg: "Goal added successfully",
+                    type: "success",
+                });
+                setGoalDescription('');
+                setGoalCurrentStep('');
+                setGoalTotalSteps('');
+                setFinished(false);
+            } catch (err) {
+                console.error(err);
+                setMessage({
+                    msg: "Impossible to add goal. Try later.",
+                    type: "danger",
+                });
+            }
+        };
+        if (loggedIn && finished && goalDescription && goalTotalSteps && goalCurrentStep) {
             addGoal();
         }
     }, [finished, goalDescription, goalTotalSteps, goalCurrentStep, loggedIn]);
+
+    useEffect(() => {
+        const editGoal = async () => {
+            try {
+                await api.updateGoal(goalIdToEdit, goalDescription, goalTotalSteps, goalCurrentStep);
+                setMessage({
+                    msg: "Goal added successfully",
+                    type: "success",
+                });
+                setGoalDescription('');
+                setGoalCurrentStep('');
+                setGoalTotalSteps('');
+                setFinishedEited(false);
+            } catch (err) {
+                console.error(err);
+                setMessage({
+                    msg: "Impossible to update goal. Try later.",
+                    type: "danger",
+                });
+            }
+        };
+        if (loggedIn && finishedEdited && goalDescription && goalTotalSteps && goalCurrentStep) {
+            editGoal();
+        }
+    }, [finishedEdited, goalIdToEdit, goalDescription, goalTotalSteps, goalCurrentStep, loggedIn]);
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -69,7 +122,6 @@ function GoalsPage(props) {
             event.stopPropagation();
         } else {
             setGoalDescription(form.formGoalDescription.value);
-
             setGoalTotalSteps(parseInt(form.formGoalTotal.value));
             setGoalCurrentStep(parseInt(form.formGoalCurrent.value));
             setShow(false);
@@ -77,74 +129,129 @@ function GoalsPage(props) {
         }
     };
 
+    const handleSubmitEdited = (event) => {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+        } else {
+            setGoalDescription(form.formGoalDescription.value);
+            setGoalTotalSteps(parseInt(form.formGoalTotal.value));
+            setGoalCurrentStep(parseInt(form.formGoalCurrent.value));
+            setEditSelected(false);
+            setFinishedEited(true);
+        }
+    };
+
+    const handleDelete = (goal_id) => {
+        setDeleteSelected(true);
+        setGoalIdToDelete(goal_id);
+    };
+
+    const handleEdit = (goal_id) => {
+        setEditSelected(true);
+        setGoalIdToEdit(goal_id);
+    };
+
+    useEffect(() => {
+        const deleteGoal = async () => {
+            try {
+                await api.deleteGoal(goalIdToDelete);
+                setMessage({ msg: 'Goal deleted successfully', type: 'success' });
+                setDeleteSelected(false);
+                setGoalIdToDelete(null);
+                await api.getGoals();
+            } catch (err) {
+                setMessage({ msg: 'Impossible to delete personal goal. Try again!', type: 'danger' });
+                console.error(err);
+            }
+        };
+
+        if (deleteSelected) {
+            deleteGoal();
+        }
+    }, [deleteSelected, goalIdToDelete]);
+
+    const handleCloseEdited = () => {
+        setEditSelected(false);
+    }
+
     return (
         <Container className='fade-in text-center' style={{ marginTop: '3em' }}>
-            <Card style={{ backgroundColor: 'var(--ut-orange)', borderRadius: '15px' }}>
-                <Card.Title>
-                    Personal Goals
+            <Card style={{ backgroundColor: '#FCF8F1', borderRadius: '15px', padding: '2em', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.9)', alignItems:'center' }}>
+                <Card.Title style={{ fontSize: '2.5rem', marginBottom: '1em', fontWeight: 'bold', color: '#333' }}>
+                    The Voyage
                 </Card.Title>
-                <Card.Text>
-                    Here are my personal goals set over lot of thoughts; since I think I need to learn a lot still,
-                    I might consider to finish all of these tasks to enhance my skills.
+                <Card.Text style={{ fontSize: '1.3rem', color: '#666' }}>
+                    A personalized canvas for aspirations.
+                    Here, I embark on a journey of self-discovery, guided by the North Star of my desires.
+                    Each goal becomes a deliberate brushstroke, adding vibrant hues to the tapestry of my life.
+                    As I navigate this sea of possibilities, I celebrate every milestone—a beacon of hope and progress.
+                    Join me as we chart our course, one beautiful stride at a time.
                 </Card.Text>
+                <Image roundedCircle src={require('../Pictures/the_voyage_bg.jpeg')} style={{width: '20%', height:'auto'}} />
             </Card>
+            <Row style={{justifyContent:'center', fontSize:'2em', fontFamily:'unset', marginTop:"2em"}}>
+                Ongoing tasks
+            </Row>
 
-            {goals.map((goal, index) => (
-                <Container className='fade-in' style={{ marginTop: '2em', textAlign: 'left' }} key={index}>
-                    <p>{goal.description}</p>
-                    <Row>
-                        <Col>
-                            <div className="progress" style={{ height: '2em', backgroundColor: colors[index % 5 + 5], position: 'relative', overflow: 'visible' }}>
-                                <div className="progress-bar" role="progressbar" style={{ width: `${(goal.current_step / goal.total_steps) * 100}%`, backgroundColor: colors[index % 5] }} aria-valuenow={goal.current_step} aria-valuemin="0" aria-valuemax={goal.total_steps}>
-                                    {`${goal.current_step}/${goal.total_steps}`}
-                                </div>
-                                <div style={{ position: 'absolute', left: `${(goal.current_step / goal.total_steps) * 100}%`, top: '50%', transform: 'translate(-50%, -50%)' }}>
-                                    <CaretRightFill size={45} style={{ position: 'relative', zIndex: 1 }} />
-                                </div>
-                            </div>
-                        </Col>
-                        {loggedIn ? (
-                            <Col className="d-flex" style={{ justifyContent: "space-around" }} md={2}>
-                                <Button variant='warning'>
-                                    <PencilSquare />
-                                </Button>
-                                <Button variant='danger'>
-                                    <Trash />
-                                </Button>
+            {goals.map((goal) => {
+                const colors = [
+                    "#fbf8ccff",
+                    "#fde4cf",
+                    "#ffcfd2",
+                    "#f1c0e8",
+                    "#cfbaf0",
+                    "#a3c4f3",
+                    "#90dbf4",
+                    "#8eecf5",
+                    "#98f5e1",
+                    "#b9fbc0"
+                ];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                return (
+                    <Container className='fade-in' style={{ marginTop: '2em', textAlign: 'left', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', borderRadius: '15px', padding: '1em', backgroundColor: randomColor }} key={goal.goal_id}>
+                        <p style={{ fontSize: '1.2rem', marginBottom: '0.7em', fontWeight: 'bold', color: '#333' }}>{goal.description}</p>
+                        <Row>
+                            <Col>
+                                <ProgressBar variant='primary' animated striped now={(goal.current_step / goal.total_steps) * 100} label={`${goal.current_step}/${goal.total_steps}`} style={{ backgroundColor: 'lightgrey' }} />
                             </Col>
+                            {loggedIn ? (
+                                <Col className="d-flex" style={{ justifyContent: "space-around" }} md={2}>
+                                    <Button variant='warning' onClick={() => handleEdit(goal.goal_id)}>
+                                        <PencilSquare />
+                                    </Button>
+                                    <Button variant='danger' onClick={() => handleDelete(goal.goal_id)}>
+                                        <Trash />
+                                    </Button>
+                                </Col>
 
-                        ) : null}
-                    </Row>
-                </Container>
-            ))}
+                            ) : null}
+                        </Row>
+                    </Container>
+                )
+            })}
             {loggedIn ? (
-                <>
-                    <Row style={{ marginTop: '3em' }}>
-                        <Col>
-                            <p>
-                                Want to add a new goal?
-                            </p>
-                            <Button onClick={handleShow}>
-                                <PlusCircle /> Add
-                            </Button>
-                        </Col>
-                    </Row>
-
-                    <Modal show={show} onHide={handleClose}>
+                (editSelected && goalToEditInfo) ? (
+                    <Modal show={editSelected} onHide={handleCloseEdited} backdrop='static' keyboard={false}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Add a new goal</Modal.Title>
+                            <Modal.Title>
+                                Edit the goal
+                            </Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form onSubmit={handleSubmit} >
+                            <Form onSubmit={handleSubmitEdited}>
                                 <Form.Group controlId='formGoalDescription'>
                                     <Form.Label>Goal Title</Form.Label>
-                                    <Form.Control required type='text' placeholder='Enter goal description'
+                                    <Form.Control required type='text'
+                                        defaultValue={goalToEditInfo.description}
                                         minLength={10}
                                         maxLength={100}
-                                        value={goalDescription}
                                         onChange={(e) => setGoalDescription(e.target.value)}
                                         isInvalid={goalDescription.length < 10 || goalDescription.length > 100}
                                         isValid={goalDescription.length >= 10 && goalDescription.length <= 100}
+                                        autoFocus
                                     />
                                     <Form.Control.Feedback type='invalid'>It must be at least 10 characters!</Form.Control.Feedback>
                                     <Form.Control.Feedback type='valid'>The description is ok!</Form.Control.Feedback>
@@ -155,7 +262,7 @@ function GoalsPage(props) {
                                     <Form.Control required type='number' placeholder='Enter total number of steps (e.g. 10)'
                                         min={1}
                                         max={20}
-                                        value={goalTotalSteps}
+                                        defaultValue={goalToEditInfo.total_steps}
                                         onChange={e => setGoalTotalSteps(e.target.value)}
                                         isInvalid={goalTotalSteps < 2 || goalTotalSteps > 20}
                                         isValid={goalTotalSteps >= 1 && goalTotalSteps <= 20}
@@ -169,7 +276,7 @@ function GoalsPage(props) {
                                     <Form.Label>Current Step</Form.Label>
                                     <Form.Control required type='number' placeholder='Enter the current step of development'
                                         min={0}
-                                        value={goalCurrentStep}
+                                        defaultValue={goalToEditInfo.current_step}
                                         onChange={e => setGoalCurrentStep(e.target.value)}
                                         isValid={goalTotalSteps >= 0 || goalCurrentStep <= goalTotalSteps}
                                         isInvalid={goalCurrentStep > goalTotalSteps} />
@@ -178,15 +285,86 @@ function GoalsPage(props) {
                                 </Form.Group>
                                 <br />
                                 <div className='text-center'>
-                                    <Button variant='success' type='submit'>
-                                        <Check2All /> Submit
+                                    <Button variant='warning' type='submit'>
+                                        <PencilFill /> Edit
                                     </Button>
                                 </div>
                             </Form>
                         </Modal.Body>
                     </Modal>
-                </>
-            ) : null}
+                ) : (
+                    <>
+                        <Row style={{ marginTop: '3em', fontSize:'1.1em' }}>
+                            <Col>
+                                <p>
+                                    Want to add a new goal?
+                                </p>
+                                <Button onClick={handleShow}>
+                                    <PlusCircle /> Add
+                                </Button>
+                            </Col>
+                        </Row>
+
+                        <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Add a new goal</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form onSubmit={handleSubmit} >
+                                    <Form.Group controlId='formGoalDescription'>
+                                        <Form.Label>Goal Title</Form.Label>
+                                        <Form.Control required type='text' placeholder='Enter goal description'
+                                            minLength={10}
+                                            maxLength={100}
+                                            value={goalDescription}
+                                            onChange={(e) => setGoalDescription(e.target.value)}
+                                            isInvalid={goalDescription.length < 10 || goalDescription.length > 100}
+                                            isValid={goalDescription.length >= 10 && goalDescription.length <= 100}
+                                            autoFocus
+                                        />
+                                        <Form.Control.Feedback type='invalid'>It must be at least 10 characters!</Form.Control.Feedback>
+                                        <Form.Control.Feedback type='valid'>The description is ok!</Form.Control.Feedback>
+                                    </Form.Group>
+                                    <br />
+                                    <Form.Group controlId='formGoalTotal'>
+                                        <Form.Label>Total Steps</Form.Label>
+                                        <Form.Control required type='number' placeholder='Enter total number of steps (e.g. 10)'
+                                            min={1}
+                                            max={20}
+                                            value={goalTotalSteps}
+                                            onChange={e => setGoalTotalSteps(e.target.value)}
+                                            isInvalid={goalTotalSteps < 2 || goalTotalSteps > 20}
+                                            isValid={goalTotalSteps >= 1 && goalTotalSteps <= 20}
+                                        />
+                                        <Form.Control.Feedback type='invalid'>Insert a number between 1 and 20!</Form.Control.Feedback>
+
+                                    </Form.Group>
+                                    <br />
+
+                                    <Form.Group controlId='formGoalCurrent'>
+                                        <Form.Label>Current Step</Form.Label>
+                                        <Form.Control required type='number' placeholder='Enter the current step of development'
+                                            min={0}
+                                            value={goalCurrentStep}
+                                            onChange={e => setGoalCurrentStep(e.target.value)}
+                                            isValid={goalTotalSteps >= 0 || goalCurrentStep <= goalTotalSteps}
+                                            isInvalid={goalCurrentStep > goalTotalSteps} />
+                                        <Form.Control.Feedback type='invalid'>The current step must be below {goalTotalSteps}</Form.Control.Feedback>
+
+                                    </Form.Group>
+                                    <br />
+                                    <div className='text-center'>
+                                        <Button variant='success' type='submit'>
+                                            <Check2All /> Submit
+                                        </Button>
+                                    </div>
+                                </Form>
+                            </Modal.Body>
+                        </Modal>
+                    </>
+                )
+            ) : null
+            }
         </Container >
     )
 };
