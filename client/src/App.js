@@ -54,70 +54,34 @@ function App() {
       .catch((err) => console.log(err));
   };
 
+
   return (
     <>
       <Router>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
 
-        <NavBar
-          loggedIn={loggedIn}
-          logout={doLogOut}
-          user={user}
-        />
-
-        <Routes>
-          <Route exact path='/' element={
-            <LandingPage />
-          }
+          <NavBar
+            loggedIn={loggedIn}
+            logout={doLogOut}
+            user={user}
           />
+          <div style={{ flex: 1 }}>
 
-          <Route path='/articles' element={
-            <ArticlesPage />
-          }
-          />
-
-          <Route path='/login' element={
-            loggedIn ?
-              <Navigate to='/' replace /> :
-              <LoginComponent
-                login={doLogIn}
-                loading={loading}
-              />
-          }
-          />
-
-          <Route path='/write-article' element={
-            <WritePage
-              user={user}
-              loggedIn={loggedIn}
-              toModify={toModify} />
-          } />
-
-          <Route path='/personal-area' element={
-            <UserLanding
-              user={user} />
-          } />
-
-          <Route path='/articles-manager' element={
-            <ManagementPage
-              user={user}
-              loggedIn={loggedIn}
-              setToModify={setToModify} />
-          } />
-
-          <Route path='/articles/:art_id' element={
-            <ArticleVisualizer />
-          } />
-
-          <Route path='/personal-goals' element={
-            <GoalsPage
-              user={user}
-              loggedIn={loggedIn}
-            />
-          }
-          />
-
-        </Routes>
-        <Footer />
+            <Routes>
+              <Route exact path='/' element={<LandingPage />} />
+              <Route path='/articles' element={<ArticlesPage />} />
+              <Route path='/login' element={loggedIn ? <Navigate to='/' replace /> : <LoginComponent login={doLogIn} loading={loading} />} />
+              <Route path='/write-article' element={<WritePage user={user} loggedIn={loggedIn} toModify={toModify} />} />
+              <Route path='/personal-area' element={<UserLanding user={user} />} />
+              <Route path='/articles-manager' element={<ManagementPage user={user} loggedIn={loggedIn} setToModify={setToModify} />} />
+              <Route path='/articles/:art_id' element={<ArticleVisualizer />} />
+              <Route path='/personal-goals' element={<GoalsPage user={user} loggedIn={loggedIn} />} />
+            </Routes>
+          </div>
+          <div style={{marginTop:"2em"}}>
+            <Footer />
+          </div>
+        </div>
       </Router>
     </>
   );

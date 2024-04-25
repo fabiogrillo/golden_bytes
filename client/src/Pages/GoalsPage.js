@@ -213,7 +213,7 @@ function GoalsPage(props) {
                 <Image roundedCircle src={require('../Pictures/the_voyage_bg.jpeg')} style={{ width: '20%', height: 'auto' }} />
             </Card>
             <Row style={{ justifyContent: 'center', fontSize: '2em', fontFamily: 'unset', marginTop: "2em" }}>
-                Ongoing tasks
+                Ongoing goals
             </Row>
 
             {goals.map((goal) => {
@@ -331,12 +331,12 @@ function GoalsPage(props) {
                                         min={20000101}
                                         defaultValue={goalToEditInfo.start_date}
                                         onChange={e => setGoalStartDate(e.target.value)}
-                                        isInvalid={goalStartDate < 20000101 }
+                                        isInvalid={goalStartDate < 20000101}
                                     />
                                     <Form.Control.Feedback type='invalid'>Insert a date after 2000, 01, 01!</Form.Control.Feedback>
 
                                 </Form.Group>
-                                <br/>
+                                <br />
                                 <div className='text-center'>
                                     <Button variant='warning' type='submit'>
                                         <PencilFill /> Edit

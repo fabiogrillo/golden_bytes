@@ -2,13 +2,7 @@ import { Container, Navbar } from "react-bootstrap";
 import { Github, Instagram, Linkedin } from "react-bootstrap-icons";
 
 export const Footer = () => (
-    <Navbar expand="lg" style={{
-        backgroundColor: 'var(--prussian-blue)',
-        width: '100%',
-        bottom: 0,
-        marginTop: '3em',
-        position: 'fixed',
-    }}>
+    <Navbar expand="lg" style={{ position: 'bottom', bottom: 0, backgroundColor: 'var(--prussian-blue)', padding: '2em', width: '100%' }}>
         <Container className="d-flex justify-content-between">
             <div style={{ color: 'var(--selective-yellow)', fontSize: '0.9em' }}>
                 <p>

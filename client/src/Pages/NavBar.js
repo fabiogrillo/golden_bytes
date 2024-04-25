@@ -4,7 +4,7 @@ import { Book, BoxArrowLeft, Check2Circle, CloudCheck, PersonCircle } from 'reac
 
 const NavBar = (props) => {
     return (
-        <Navbar expand="lg" style={{ backgroundColor: 'var(--prussian-blue)' }}>
+        <Navbar expand="lg" style={{ backgroundColor: 'var(--prussian-blue)', boxShadow:'0px 4px 10px rgba(0, 0, 0, 1)' }}>
             <Container fluid style={{ display: 'flex', justifyContent: 'center' }} >
                 <div className="d-flex justify-content-center">
                     <Navbar.Brand href="/" style={{ color: 'var(--selective-yellow)', fontSize: '1.75em' }}>Golden Bytes</Navbar.Brand>
