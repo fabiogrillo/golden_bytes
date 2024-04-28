@@ -223,7 +223,6 @@ async function logIn(credentials) {
 }
 
 async function logOut() {
-    console.log("sono qui dentro api");
     await fetch(BASEURL + '/sessions/current', { method: 'DELETE' });
 }
 

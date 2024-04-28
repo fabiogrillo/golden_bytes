@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Container, Button, Badge, Row, Col, Form, Alert } from "react-bootstrap"
-import { ArrowCounterclockwise, ArrowLeft, ArrowLeftRight, ArrowRight } from "react-bootstrap-icons";
+import { Container, Button, Row, Col, Form, Alert } from "react-bootstrap"
+import { ArrowCounterclockwise, ArrowLeft, ArrowRight } from "react-bootstrap-icons";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import api from "../api";
@@ -102,22 +102,20 @@ export const WriteComponent = (props) => {
 
 
     useEffect(() => {
-        if (!first) {
-            const getTags = async () => {
-                try {
-                    const tags = await api.getTags();
-                    setTags(tags);
-                } catch (err) {
-                    setMessage({
-                        msg: "Cannot retrieve articles",
-                        type: 'danger',
-                    });
-                    console.error(err);
-                }
+        const getTags = async () => {
+            try {
+                const tags = await api.getTags();
+                setTags(tags);
+            } catch (err) {
+                setMessage({
+                    msg: "Cannot retrieve articles",
+                    type: 'danger',
+                });
+                console.error(err);
             }
-            getTags();
         }
-    }, [first]);
+        getTags();
+    }, []);
 
     const handleSubmit = () => {
         if (quillRef.current) {
@@ -141,16 +139,16 @@ export const WriteComponent = (props) => {
 
             setContent(delta);
             setFirst(false);
+            console.log(content);
+            console.log(selectedTags);
         }
     };
 
     const handleTagClick = (tag) => {
         if (selectedTags.includes(tag)) {
-            setSelectedTags(selectedTags.filter(t => t !== tag).sort((a, b) => a.name.localeCompare(b.name)));
-            setTags([...tags, tag].sort((a, b) => a.name.localeCompare(b.name)));
+            setSelectedTags(selectedTags.filter(t => t !== tag));
         } else {
-            setTags(tags.filter(t => t !== tag).sort((a, b) => a.name.localeCompare(b.name)));
-            setSelectedTags([...selectedTags, tag].sort((a, b) => a.name.localeCompare(b.name)));
+            setSelectedTags([...selectedTags, tag]);
         }
     };
 
@@ -158,7 +156,6 @@ export const WriteComponent = (props) => {
         setContent({});
         setFirst(true);
         setSecond(true);
-        setTags([]);
         setSelectedTags([]);
     };
 
@@ -202,7 +199,7 @@ export const WriteComponent = (props) => {
         if (loggedIn && finished) {
             saveArticle();
         }
-    }, [finished, jsonContent, articleToModify]);
+    }, [finished, jsonContent, articleToModify, date, description, loggedIn, stringTags, toModifyId, user.id]);
 
     return (
         <Container className="fade-in">
@@ -217,14 +214,38 @@ export const WriteComponent = (props) => {
                             </Alert>
                         ) : (
                             <>
-                                <div style={{ marginTop: "2em", fontSize: "2em" }}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-1-circle" viewBox="0 0 16 16">
-                                        <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z" />
-                                    </svg>{' '}
-                                    {"Write your article"}
-                                </div>
+                                <Row style={{ marginTop: "2em", fontSize: "2em" }}>
+                                    <h2>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-1-circle" viewBox="0 0 16 16">
+                                            <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383z" />
+                                        </svg>{' '}
+                                        {"Write your article"}
+                                    </h2>
+                                </Row>
                                 <ReactQuill theme="snow" modules={modules} style={{ marginTop: '1.5em', backgroundColor: 'white' }}
                                     formats={formats} placeholder="Insert text here..." ref={quillRef} />
+
+                                <Row style={{ marginTop: "2em", fontSize: "2em" }}>
+                                    <h2>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-2-circle" viewBox="0 0 16 16">
+                                            <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.646 6.24v.07H5.375v-.064c0-1.213.879-2.402 2.637-2.402 1.582 0 2.613.949 2.613 2.215 0 1.002-.6 1.667-1.287 2.43l-.096.107-1.974 2.22v.077h3.498V12H5.422v-.832l2.97-3.293c.434-.475.903-1.008.903-1.705 0-.744-.557-1.236-1.313-1.236-.843 0-1.336.615-1.336 1.306" />
+                                        </svg>{' '}
+                                        {"Select what you have written about"}
+                                    </h2>
+                                </Row>
+                                <Row style={{ marginTop: '1.5em' }}>
+                                    {tags.map((tag, index) => (
+                                        <Col xs={4} key={index}>
+                                            <Form.Check
+                                                type="checkbox"
+                                                id={`tag-checkbox-${index}`}
+                                                label={tag.name}
+                                                onChange={() => handleTagClick(tag)}
+                                                checked={selectedTags.includes(tag)}
+                                            />
+                                        </Col>
+                                    ))}
+                                </Row>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2em' }}>
                                     <Link to={"/personal-area"}>
                                         <Button variant="warning">
@@ -239,62 +260,6 @@ export const WriteComponent = (props) => {
                         )}
                     </>
                 ) : (second ? (
-                    <Container className="text-center fade-in" style={{ marginTop: '2em' }}>
-                        <Row>
-                            <div style={{ fontSize: '2em' }}>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-2-circle" viewBox="0 0 16 16">
-                                    <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.646 6.24v.07H5.375v-.064c0-1.213.879-2.402 2.637-2.402 1.582 0 2.613.949 2.613 2.215 0 1.002-.6 1.667-1.287 2.43l-.096.107-1.974 2.22v.077h3.498V12H5.422v-.832l2.97-3.293c.434-.475.903-1.008.903-1.705 0-.744-.557-1.236-1.313-1.236-.843 0-1.336.615-1.336 1.306" />
-                                </svg>
-                                {' Tell what your article talks about'}
-                            </div>
-                        </Row>
-                        <br />
-                        <Row>
-                            <Col style={{ backgroundColor: 'var(--sky-blue)', borderRadius: '15px', marginRight: '1em' }}>
-                                <div style={{ fontSize: '1.5em' }}>
-                                    {'Available tags:'}
-                                </div>
-                                <div>
-                                    {tags.filter(tag => !selectedTags.includes(tag)).map((tag, index) => (
-                                        <Badge pill bg="primary" onClick={() => handleTagClick(tag)} key={index} style={{ cursor: 'pointer', margin: '0.5em', padding: '0.5em', fontSize: '1.5em' }}>
-                                            {tag.name}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </Col>
-                            <Col xs lg='2' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <ArrowLeftRight style={{ fontSize: '3em' }} />
-                            </Col>
-                            <Col style={{ backgroundColor: 'var(--selective-yellow)', borderRadius: '15px', marginLeft: '1em' }}>
-                                <div style={{ fontSize: '1.5em' }}>
-                                    {'Selected tags:'}
-                                </div>
-                                <div>
-                                    {selectedTags.map((tag, index) => (
-                                        <Badge pill bg="danger" onClick={() => handleTagClick(tag)} key={index} style={{ cursor: 'pointer', margin: '0.5em', padding: '0.5em', fontSize: '1.5em' }}>
-                                            {tag.name}
-                                        </Badge>
-                                    ))}
-                                </div>
-                            </Col>
-                        </Row>
-                        <br />
-                        <Row>
-                            <Col className="text-start">
-                                <Button onClick={handleBack}>
-                                    <ArrowLeft /> Back
-                                </Button>
-                            </Col>
-                            {selectedTags.length > 0 ? (
-                                <Col className="text-end">
-                                    <Button variant="success" onClick={() => (setSecond(false))}>
-                                        Next <ArrowRight />
-                                    </Button>
-                                </Col>) : null
-                            }
-                        </Row>
-                    </Container>
-                ) : (
                     <Container className="text-center fade-in" style={{ marginTop: '2em' }}>
                         <Row>
                             <div style={{ fontSize: '2em' }}>
@@ -330,7 +295,7 @@ export const WriteComponent = (props) => {
                             </Form>
                         </Row>
                     </Container>
-                )
+                ) : null
                 )
             }
         </Container>

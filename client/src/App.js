@@ -31,10 +31,14 @@ function App() {
         console.log(err);
       }
     };
-    checkAuth()
-      .then(() => setLoading(false))
-      .catch((err) => console.log(err));
-  }, []);
+
+    if (!loggedIn) {
+      checkAuth()
+        .then(() => setLoading(false))
+        .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
+
 
   const doLogIn = async (credentials) => {
     try {
@@ -78,7 +82,7 @@ function App() {
               <Route path='/personal-goals' element={<GoalsPage user={user} loggedIn={loggedIn} />} />
             </Routes>
           </div>
-          <div style={{marginTop:"2em"}}>
+          <div style={{ marginTop: "2em" }}>
             <Footer />
           </div>
         </div>

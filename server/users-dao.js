@@ -29,7 +29,7 @@ exports.getUser = (email, password) => {
                 resolve(false);
             } else {
                 const user = { id: row.id, username: row.email, name: row.name };
-                
+
                 bcrypt
                     .compare(password, row.hash)
                     .then((result) => {

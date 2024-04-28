@@ -1,12 +1,13 @@
-import { Row, Button, Container, Form, InputGroup, Col, Nav, Image } from 'react-bootstrap';
-import { Github, Instagram, Linkedin, Search } from 'react-bootstrap-icons';
+import { Row, Container, Col, Image } from 'react-bootstrap';
+import { Github, Instagram, Linkedin } from 'react-bootstrap-icons';
+import NewsFeedComponent from './NewsFeedComponent';
 
 export const LandingPage = () => {
 
 
     return (
         <>
-            <Container className="fade-in" style={{ marginTop: '3em', padding: '20px', backgroundColor: '#E2FBD4', borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.8)' }}>
+            <Container className="fade-in" style={{ marginTop: '3em', padding: '20px', backgroundColor: '#d8e2dc', borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.8)' }}>
                 <Row className="d-flex justify-content-center fade-in">
                     <Col md={8}>
                         <p style={{ color: '#333', fontSize: '2.2rem', fontWeight: 'bold', textAlign: 'center' }}>
@@ -20,7 +21,7 @@ export const LandingPage = () => {
                         </p>
                     </Col>
                 </Row>
-                <Row style={{justifyContent:'center'}}>
+                <Row style={{ justifyContent: 'center' }}>
                     <Image roundedCircle src={require('../Pictures/landing_bg.jpeg')} style={{ width: '20%', height: 'auto' }} />
                 </Row>
 
@@ -60,31 +61,9 @@ export const LandingPage = () => {
                         </a>
                     </Col>
                 </Row>
-                <Row className="d-flex justify-content-center" style={{ marginTop: '3em' }}>
-                    <InputGroup className="mb-3" style={{ maxWidth: '300px', maxHeight: '10px', borderRadius: '20px' }} >
-                        <Form.Control type="text" placeholder="Search Keyword" className="mr-sm-2" style={{ borderRadius: '20px' }} />
-                        <Button variant="outline-success" id="button-addon2" style={{ borderRadius: '20px', backgroundColor: 'var(--ut-orange)', borderColor: 'var(--ut-orange)', color: 'var(--prussian-blue)' }}>
-                            <Search />
-                        </Button>
-                    </InputGroup>
-                </Row>
-                <Row className="d-flex justify-content-center" style={{ marginTop: '3em' }}>
-                    <Container>
-                        <Nav className="d-flex justify-content-center" activeKey="/home">
-                            <Nav.Item>
-                                <Nav.Link href="/home" className="nav-land" style={{ color: 'var(--prussian-blue)' }}>Tecnologia</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="link-1" className="nav-land" style={{ color: 'var(--prussian-blue)' }}>Personal Growth</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="link-2" className="nav-land" style={{ color: 'var(--prussian-blue)' }}>Altri</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Container>
-                </Row>
 
             </Container>
+            <NewsFeedComponent />
 
         </>
     );

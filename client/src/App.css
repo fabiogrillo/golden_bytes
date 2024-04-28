@@ -153,3 +153,12 @@ body {
 .social-button:hover {
   animation: tada 1.5s infinite;
 }
+
+@keyframes shake {
+  0% { color: #ffc09f; }
+  25% { color: #ffee93; }
+  50% { color: #fcf5c7; }
+  75% { color: #a0ced9; }
+  100% { color: #adf7b6; }
+}
+
