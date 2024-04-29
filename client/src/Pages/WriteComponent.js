@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Container, Button, Row, Col, Form, Alert } from "react-bootstrap"
-import { ArrowCounterclockwise, ArrowLeft, ArrowRight } from "react-bootstrap-icons";
+import { Container, Button, Row, Col, Form, Alert, Modal } from "react-bootstrap"
+import { ArrowCounterclockwise, ArrowLeft, ArrowRight, PlusCircle, TagFill } from "react-bootstrap-icons";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
 import api from "../api";
@@ -61,6 +61,10 @@ export const WriteComponent = (props) => {
     const [alertMsg, setAlertMsg] = useState('');
     const [show, setShow] = useState(false);
     const [articleToModify, setArticleToModify] = useState({});
+    const [showTagForm, setShowTagForm] = useState(false);
+    const [newTagName, setNewTagName] = useState("");
+    const [createNewTag, setCreateNewTag] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
 
     const user = props.user;
     const loggedIn = props.loggedIn;
@@ -159,7 +163,6 @@ export const WriteComponent = (props) => {
         setSelectedTags([]);
     };
 
-
     const handleFinished = () => {
 
         let today = new Date();
@@ -200,6 +203,37 @@ export const WriteComponent = (props) => {
             saveArticle();
         }
     }, [finished, jsonContent, articleToModify, date, description, loggedIn, stringTags, toModifyId, user.id]);
+
+    useEffect(() => {
+        const newTag = async () => {
+            try {
+                const capitalizedTagName = newTagName
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+                await api.addTag(capitalizedTagName);
+                const tags = await api.getTags();
+                setTags(tags);
+                setShowTagForm(false);
+                setCreateNewTag(false);
+                setNewTagName('');
+            } catch (err) {
+                setMessage({
+                    msg: "Impossible to save the tag. Try later.",
+                    type: "danger",
+                });
+                console.error(err);
+            }
+        };
+
+        if (loggedIn && createNewTag) {
+            newTag();
+        }
+    }, [newTagName, createNewTag, loggedIn]);
+
+    const handleAddTag = () => {
+        setCreateNewTag(true);
+    };
 
     return (
         <Container className="fade-in">
@@ -246,6 +280,52 @@ export const WriteComponent = (props) => {
                                         </Col>
                                     ))}
                                 </Row>
+                                <Row>
+                                    <Col className="text-center">
+                                        <p>
+                                            Want to add a new tag?
+                                        </p>
+                                        <Button onClick={() => setShowTagForm(true)}>
+                                            <PlusCircle /> Add
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Modal show={showTagForm} onHide={() => setShowTagForm(false)}>
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>
+                                            <TagFill /> Add New Tag
+                                        </Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                        <Form onSubmit={(e) => {
+                                            e.preventDefault();
+                                        }}>
+                                            <Form.Group controlId="newTagName">
+                                                <Form.Label>Tag Name</Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Enter tag name"
+                                                    value={newTagName}
+                                                    onChange={(e) => setNewTagName(e.target.value)}
+                                                />
+                                                {newTagName.length < 3 || newTagName.length > 20 ? (
+                                                    <Form.Text className="text-danger">
+                                                        Tag name must be between 3 and 20 characters long
+                                                    </Form.Text>
+                                                ) : null}
+                                            </Form.Group>
+                                            <br />
+                                            <Button variant="primary" onClick={handleAddTag}>
+                                                Add Tag
+                                            </Button>
+                                        </Form>
+                                    </Modal.Body>
+                                </Modal>
+                                {showAlert && (
+                                    <Alert variant="danger" onClose={() => setShowAlert(false)} dismissible>
+                                        <Alert.Heading>{alertMsg}</Alert.Heading>
+                                    </Alert>
+                                )}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2em' }}>
                                     <Link to={"/personal-area"}>
                                         <Button variant="warning">

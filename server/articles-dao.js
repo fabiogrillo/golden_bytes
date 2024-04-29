@@ -120,6 +120,20 @@ exports.createArticle = (usr_id, content, date, tags, description) => {
     });
 };
 
+// create a new tag
+exports.createTag = (tag_name) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO tags(tag_name) VALUES(?)';
+        db.run(sql, [tag_name], function (err) {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(this.changes);
+        });
+    });
+};
+
 // update an existing article
 exports.updateArticle = (art_id, usr_id, content, date, tags, description) => {
     return new Promise((resolve, reject) => {

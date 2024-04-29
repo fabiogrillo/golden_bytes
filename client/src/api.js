@@ -100,6 +100,27 @@ async function addGoal(description, total_steps, current_step, start_date, addit
     });
 };
 
+async function addTag(tag_name) {
+    //call: POST /api/tags
+    return new Promise((resolve, reject) => {
+        fetch(BASEURL + '/tags', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tag_name: tag_name }),
+        }).then((response) => {
+            if (response.ok) {
+                resolve(null);
+            } else {
+                response.json()
+                    .then((message) => { reject(message); })
+                    .catch(() => { reject({ error: "Cannot parse server response." }) });
+            }
+        }).catch(() => { reject({ error: "Cannot communicate with the server." }) });
+    });
+}
+
 async function updateArticle(art_id, usr_id, content, date, tags, description) {
     // call: PUT /api/users/:usr_id/articles/:art_id
     return new Promise((resolve, reject) => {
@@ -246,6 +267,6 @@ const api = {
     getArticles, getTags, logIn, logOut, getUserInfo,
     addArticle, getMyArticles, deleteMyArticle, getArticleById,
     updateArticle, getGoals, addGoal, deleteGoal, getGoalById,
-    updateGoal
+    updateGoal, addTag
 };
 export default api;

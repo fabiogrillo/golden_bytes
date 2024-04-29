@@ -230,6 +230,23 @@ app.post('/api/goals', isLoggedIn, [
   }
 });
 
+// POST /api/tags
+app.post('/api/tags', isLoggedIn, [
+  check('tag_name').isLength({ min: 3, max: 20 }),
+  check('tag_name').isString()
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+  try {
+    await articlesDao.createTag(req.body.tag_name);
+    res.status(201).end();
+  } catch (err) {
+    res.status(500).json({ error: `Server error during tag creation... ` })
+  }
+});
+
 // PUT /api/users/:usr_id/articles/:art_id
 app.put('/api/users/:usr_id/articles/:art_id', isLoggedIn, [
   check('usr_id').isInt({ min: 1, max: 10 }),
