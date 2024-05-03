@@ -133,7 +133,6 @@ export const WriteComponent = (props) => {
                 return;
             }
             const sanitizedHTML = DOMPurify.sanitize(delta.ops[0].insert);
-
             if (!sanitizedHTML) {
                 console.log("Content is not a valid Delta format!");
                 setShow(true);
@@ -142,9 +141,9 @@ export const WriteComponent = (props) => {
             }
 
             setContent(delta);
+
             setFirst(false);
-            console.log(content);
-            console.log(selectedTags);
+
         }
     };
 
@@ -175,7 +174,6 @@ export const WriteComponent = (props) => {
 
         const stringTags = selectedTags.map(tag => tag.name).join(', ');
         setStringTags(stringTags);
-
         setJsonContent(JSON.stringify(content));
         setFinished(true);
     }
@@ -183,12 +181,12 @@ export const WriteComponent = (props) => {
     useEffect(() => {
         const saveArticle = async () => {
             try {
-                if (articleToModify) {
+                if (articleToModify === "{}") {
                     // Update existing article
                     await api.updateArticle(toModifyId, user.id, jsonContent, date, stringTags, description);
                 } else {
                     // Add new article
-                    await api.addArticle(user.id, jsonContent, date, stringTags, description);
+                    await api.addArticle(user.id, jsonContent,  date, stringTags, description);
                 }
             } catch (err) {
                 setMessage({
@@ -368,7 +366,7 @@ export const WriteComponent = (props) => {
                                     </Col>
                                     <Col className="text-end">
                                         {description.length < 50 || description.length > 200 ? null :
-                                            <Button onClick={handleFinished} href="/articles" >Finish</Button>
+                                            <Button onClick={handleFinished} href="/articles">Finish</Button>
                                         }
                                     </Col>
                                 </Row>
