@@ -1,5 +1,5 @@
 import api from '../api';
-import { Card, Container, Carousel, Row, Col, Badge } from 'react-bootstrap';
+import { Card, Container, Carousel, Row, Col, Badge, Image } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -46,6 +46,24 @@ function ArticlesPage(props) {
 
     return (
         <>
+            <Container style={{marginTop:"3em", textAlign:'center'}}>
+                <Card style={{ backgroundColor: '#f8edeb', borderRadius: '15px', padding: '2em', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.9)', alignItems: 'center' }}>
+                    <Card.Title style={{ fontSize: '2.5rem', marginBottom: '1em', fontWeight: 'bold', color: '#333' }}>
+                        The Archive
+                    </Card.Title>
+                    <Card.Text style={{ fontSize: '1.3rem', color: '#666' }}>
+                        Welcome to Exploring Bytes, a personal treasury where each article is a step in my journey through the fascinating worlds of software and data engineering, artificial intelligence, and personal finance. This is a space where I document what I’ve learned, share discoveries, and discuss ideas with a sense of wonder and an open mind.
+                        As I navigate these complex fields, I invite you to join me. Here, you won’t find the words of an all-knowing guru, but rather the reflections of someone who is learning, experimenting, and growing every day. It’s about the thrill of the ‘aha!’ moments, the satisfaction of solving puzzles, and the joy of sharing knowledge.
+                        From time to time, I’ll also sprinkle in musings on various other topics that capture my curiosity. Because learning is not just about depth in a single subject, but also about the connections we make along the way.
+                        So, whether you’re a fellow learner or simply curious about these topics, dive into the Exploring Bytes collection. Let’s embark on this adventure together, with curiosity as our guide and the unknown as our destination.
+                        I hope this feels more aligned with your vision for the blog. If there’s anything else you’d like to adjust, just let me know!
+                    </Card.Text>
+                    <Image roundedCircle src={require('../Pictures/articles_intro.jpeg')} style={{ width: '20%', height: 'auto' }} />
+                </Card>
+            </Container>
+            <Row style={{ justifyContent: 'center', fontSize: '2em', fontFamily: 'unset', marginTop: "2em" }}>
+                Last articles
+            </Row>
             <Container className="fade-in text-center container-transition" style={{ marginTop: '3em', padding: '20px', backgroundColor: `var(${currentColor})`, borderRadius: '15px', color: '#FFFFFF', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.7)' }}>
                 <Carousel activeIndex={index} onSelect={handleSelect} style={{ marginTop: '1em', height: '22em' }}>
                     {articles.slice(0, 3).map((article, index) => {
